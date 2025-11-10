@@ -1,0 +1,21 @@
+{
+  "total_stations_tested": 23,
+  "active_stations": 11,
+  "inactive_stations": 12,
+  "error_stations": 0,
+  "failure_rate": 52.17391304347826,
+  "by_province": {
+    "ONTARIO": {
+      "total": 13,
+      "active": 7,
+      "inactive": 6,
+      "failure_rate": 46.15384615384615
+    },
+    "QUEBEC": {
+      "total": 10,
+      "active": 4,
+      "inactive": 6,
+      "failure_rate": 60.0
+    }
+  }
+}
