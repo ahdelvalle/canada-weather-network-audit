@@ -269,7 +269,7 @@
                 <div class="sub-stats">
                     Failure Rate<br>
                     1 of 21 stations offline<br>
-                    Major cities & airports affected
+                    Major cities &amp; airports affected
                 </div>
             </div>
 
@@ -289,7 +289,7 @@
             <div class="stat-mega-card critical">
                 <div class="stat-mega-label">Total Stations Tested</div>
                 <div class="stat-mega-number">2594</div>
-                <div class="stat-mega-description">Random sample from 2,594 total stations</div>
+                <div class="stat-mega-description">Complete network audit</div>
             </div>
 
             <div class="stat-mega-card critical">
@@ -301,7 +301,7 @@
             <div class="stat-mega-card warning">
                 <div class="stat-mega-label">Active But Degraded</div>
                 <div class="stat-mega-number" style="color: #f39c12;">782</div>
-                <div class="stat-mega-description">Transmitting but avg 44.9% data completeness</div>
+                <div class="stat-mega-description">Transmitting but avg 45.0% data completeness</div>
             </div>
 
             <div class="stat-mega-card critical">
@@ -318,8 +318,8 @@
 
             <div class="stat-mega-card warning">
                 <div class="stat-mega-label">Average Data Quality</div>
-                <div class="stat-mega-number" style="color: #f39c12;">44.9%</div>
-                <div class="stat-mega-description">Even "active" stations missing >55% of data</div>
+                <div class="stat-mega-number" style="color: #f39c12;">45.0%</div>
+                <div class="stat-mega-description">Even "active" stations missing &gt;55% of data</div>
             </div>
         </div>
 
@@ -368,7 +368,7 @@
                 <h3 style="color: #c0392b; margin-bottom: 15px;">📊 Scale of Data Loss</h3>
                 <div style="line-height: 2; color: #555;">
                     <p><strong>Only 30.1% of stations transmit ANY data</strong></p>
-                    <p>Of the 30.1% "active" stations, average data completeness is just 44.9%</p>
+                    <p>Of the 30.1% "active" stations, average data completeness is just 45.0%</p>
                     <p>This represents a <strong>86% effective collapse</strong> of Canada's climate monitoring capability</p>
                     <p style="margin-top: 15px; font-weight: bold; color: #c0392b;">
                         Canada has lost the ability to meet its international climate reporting obligations.
@@ -386,15 +386,15 @@
                 <div style="display: inline-block; text-align: left; background: #ecf0f1; padding: 20px; border-radius: 10px;">
                     <p style="color: #27ae60; margin: 5px 0;">
                         <span style="display: inline-block; width: 20px; height: 20px; background: #27ae60; border-radius: 50%; margin-right: 10px; vertical-align: middle;"></span>
-                        <strong>23 major stations</strong> (strategic airports & cities)
+                        <strong>21 major stations</strong> (strategic airports &amp; cities)
                     </p>
                     <p style="color: #e74c3c; margin: 5px 0;">
                         <span style="display: inline-block; width: 20px; height: 20px; background: #e74c3c; border-radius: 50%; margin-right: 10px; vertical-align: middle;"></span>
-                        <strong>100 failed stations</strong> (sample from 1,410 total failures)
+                        <strong>100 failed stations</strong> (sample from 1,812 total failures)
                     </p>
                 </div>
                 <p style="color: #7f8c8d; margin-top: 15px; font-size: 0.95em;">
-                    Note: Additional 1,310 failed stations not shown due to map performance limits
+                    Note: Additional 1,712 failed stations not shown due to map performance limits
                 </p>
             </div>
             <div id="map"></div>
@@ -403,15 +403,15 @@
         <div class="footer">
             <h3>📄 Evidence Package</h3>
             <p style="margin: 20px 0; line-height: 2;">
-                <strong>Methodology:</strong> Systematic testing of 2,000 stations via Environment Canada's Historical Climate Data portal<br>
+                <strong>Methodology:</strong> Systematic testing of all 2,594 stations via Environment Canada's Historical Climate Data portal<br>
                 <strong>Testing Period:</strong> 2000-2025 with comprehensive verification<br>
                 <strong>Data Quality Analysis:</strong> NaN detection and completeness scoring<br>
-                <strong>Audit Date:</strong> November 16, 2025
+                <strong>Audit Date:</strong> December 12, 2025
             </p>
 
             <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.3);">
                 <p><strong>Adrian Hernandez-del-Valle, PhD</strong></p>
-                <p>Instituto Politécnico Nacional</p>
+                <p>Independent Researcher</p>
                 <p style="margin-top: 10px;">
                     <a href="mailto:ahdv@hotmail.com" style="color: #3498db;">
                         ahdv@hotmail.com
@@ -426,8 +426,10 @@
     </div>
 
     <script>
-        // Initialize map centered on Ontario/Quebec
-        var map = L.map('map').setView([48.0, -78.0], 5);
+        // Wait for page to fully load before initializing map
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize map centered on Ontario/Quebec
+            var map = L.map('map').setView([48.0, -78.0], 5);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
@@ -436,1022 +438,128 @@
 
         // Major stations data
         var majorStations = [
-
-            {
-                lat: 43.78,
-                lon: -79.47,
-                color: '#00ff00',
-                name: 'TORONTO NORTH YORK',
-                id: '26953',
-                status: 'ACTIVE',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.38,
-                lon: -75.72,
-                color: '#00ff00',
-                name: 'OTTAWA CDA',
-                id: '4333',
-                status: 'ACTIVE',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.47,
-                lon: -73.74,
-                color: '#00ff00',
-                name: 'MONTREAL/PIERRE ELLIOTT TRUDEAU INTL',
-                id: '30165',
-                status: 'ACTIVE',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 43.03,
-                lon: -81.15,
-                color: '#00ff00',
-                name: 'LONDON CS',
-                id: '10999',
-                status: 'ACTIVE',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 46.8,
-                lon: -71.38,
-                color: '#00ff00',
-                name: 'QUEBEC/JEAN LESAGE INTL',
-                id: '26892',
-                status: 'ACTIVE',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 48.37,
-                lon: -89.33,
-                color: '#00ff00',
-                name: 'THUNDER BAY CS',
-                id: '30682',
-                status: 'ACTIVE',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 46.63,
-                lon: -80.8,
-                color: '#00ff00',
-                name: 'SUDBURY CLIMATE',
-                id: '49508',
-                status: 'ACTIVE',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 42.28,
-                lon: -82.96,
-                color: '#00ff00',
-                name: 'WINDSOR A',
-                id: '54738',
-                status: 'ACTIVE',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 46.49,
-                lon: -84.51,
-                color: '#00ff00',
-                name: 'SAULT STE MARIE A',
-                id: '50092',
-                status: 'ACTIVE',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 43.78,
-                lon: -79.47,
-                color: '#00ff00',
-                name: 'TORONTO NORTH YORK',
-                id: '26953',
-                status: 'ACTIVE',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 44.22,
-                lon: -76.6,
-                color: '#00ff00',
-                name: 'KINGSTON CLIMATE',
-                id: '47267',
-                status: 'ACTIVE',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 43.29,
-                lon: -79.91,
-                color: '#00ff00',
-                name: 'HAMILTON RBG CS',
-                id: '27529',
-                status: 'ACTIVE',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 48.56,
-                lon: -81.39,
-                color: '#00ff00',
-                name: 'TIMMINS CLIMATE',
-                id: '47547',
-                status: 'ACTIVE',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 51.29,
-                lon: -80.61,
-                color: '#00ff00',
-                name: 'MOOSONEE',
-                id: '48950',
-                status: 'ACTIVE',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.44,
-                lon: -71.69,
-                color: '#00ff00',
-                name: 'SHERBROOKE',
-                id: '48371',
-                status: 'ACTIVE',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 46.35,
-                lon: -72.52,
-                color: '#00ff00',
-                name: 'TROIS-RIVIERES',
-                id: '10764',
-                status: 'ACTIVE',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 48.06,
-                lon: -77.79,
-                color: '#00ff00',
-                name: 'VAL-D\'OR A',
-                id: '6081',
-                status: 'ACTIVE',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 50.22,
-                lon: -66.25,
-                color: '#00ff00',
-                name: 'SEPT-ILES',
-                id: '42683',
-                status: 'ACTIVE',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 48.33,
-                lon: -71.0,
-                color: '#00ff00',
-                name: 'BAGOTVILLE A',
-                id: '5889',
-                status: 'ACTIVE',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 58.09,
-                lon: -68.42,
-                color: '#00ff00',
-                name: 'KUUJJUAQ A',
-                id: '52179',
-                status: 'ACTIVE',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 48.21,
-                lon: -78.84,
-                color: '#ff0000',
-                name: 'ROUYN-NORANDA A',
-                id: '50090',
-                status: 'INACTIVE - NO PRECIPITATION DATA',
-                province: 'QUEBEC'
-            },
-
+            { lat: 43.78, lon: -79.47, name: 'TORONTO NORTH YORK', id: '26953', status: 'ACTIVE', province: 'ONTARIO' },
+            { lat: 45.38, lon: -75.72, name: 'OTTAWA CDA', id: '4333', status: 'ACTIVE', province: 'ONTARIO' },
+            { lat: 45.47, lon: -73.74, name: 'MONTREAL/PIERRE ELLIOTT TRUDEAU INTL', id: '30165', status: 'ACTIVE', province: 'QUEBEC' },
+            { lat: 43.03, lon: -81.15, name: 'LONDON CS', id: '10999', status: 'ACTIVE', province: 'ONTARIO' },
+            { lat: 46.8, lon: -71.38, name: 'QUEBEC/JEAN LESAGE INTL', id: '26892', status: 'ACTIVE', province: 'QUEBEC' },
+            { lat: 48.37, lon: -89.33, name: 'THUNDER BAY CS', id: '30682', status: 'ACTIVE', province: 'ONTARIO' },
+            { lat: 46.63, lon: -80.8, name: 'SUDBURY CLIMATE', id: '49508', status: 'ACTIVE', province: 'ONTARIO' },
+            { lat: 42.28, lon: -82.96, name: 'WINDSOR A', id: '54738', status: 'ACTIVE', province: 'ONTARIO' },
+            { lat: 46.49, lon: -84.51, name: 'SAULT STE MARIE A', id: '50092', status: 'ACTIVE', province: 'ONTARIO' },
+            { lat: 44.22, lon: -76.6, name: 'KINGSTON CLIMATE', id: '47267', status: 'ACTIVE', province: 'ONTARIO' },
+            { lat: 43.29, lon: -79.91, name: 'HAMILTON RBG CS', id: '27529', status: 'ACTIVE', province: 'ONTARIO' },
+            { lat: 48.56, lon: -81.39, name: 'TIMMINS CLIMATE', id: '47547', status: 'ACTIVE', province: 'ONTARIO' },
+            { lat: 51.29, lon: -80.61, name: 'MOOSONEE', id: '48950', status: 'ACTIVE', province: 'ONTARIO' },
+            { lat: 45.44, lon: -71.69, name: 'SHERBROOKE', id: '48371', status: 'ACTIVE', province: 'QUEBEC' },
+            { lat: 46.35, lon: -72.52, name: 'TROIS-RIVIERES', id: '10764', status: 'ACTIVE', province: 'QUEBEC' },
+            { lat: 48.06, lon: -77.79, name: "VAL-D'OR A", id: '6081', status: 'ACTIVE', province: 'QUEBEC' },
+            { lat: 50.22, lon: -66.25, name: 'SEPT-ILES', id: '42683', status: 'ACTIVE', province: 'QUEBEC' },
+            { lat: 48.33, lon: -71.0, name: 'BAGOTVILLE A', id: '5889', status: 'ACTIVE', province: 'QUEBEC' },
+            { lat: 58.09, lon: -68.42, name: 'KUUJJUAQ A', id: '52179', status: 'ACTIVE', province: 'QUEBEC' },
+            { lat: 48.21, lon: -78.84, name: 'ROUYN-NORANDA A', id: '50090', status: 'INACTIVE', province: 'QUEBEC' }
         ];
 
-        // Add failed stations from full network (sample of 100 for dramatic effect)
+        // Failed stations sample (100 from 1,812 total)
         var failedStations = [
-
-            {
-                lat: 46.82,
-                lon: -70.75,
-                name: 'ST RAPHAEL',
-                id: '5869',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 43.22,
-                lon: -79.63,
-                name: 'WINONA',
-                id: '4720',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 61.8,
-                lon: -73.95,
-                name: 'ASBESTOS HILL',
-                id: '6087',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 48.78,
-                lon: -71.85,
-                name: 'CHUTE A LA SAVANE',
-                id: '5899',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 43.83,
-                lon: -79.35,
-                name: 'MARKHAM WATERWORKS',
-                id: '4968',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 43.87,
-                lon: -79.48,
-                name: 'MAPLE',
-                id: '4962',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 44.77,
-                lon: -79.7,
-                name: 'WAUBAUSHENE',
-                id: '4535',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 48.6,
-                lon: -85.28,
-                name: 'WHITE RIVER',
-                id: '4104',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.38,
-                lon: -75.75,
-                name: 'OTTAWA ALTA VISTA',
-                id: '4329',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 44.72,
-                lon: -81.28,
-                name: 'OLIPHANT',
-                id: '10087',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 43.45,
-                lon: -80.48,
-                name: 'KITCHENER CITY ENG 2',
-                id: '4783',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.8,
-                lon: -79.42,
-                name: 'UPLANDS',
-                id: '4526',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.82,
-                lon: -76.75,
-                name: 'FORT COULONGE',
-                id: '5589',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 45.38,
-                lon: -71.47,
-                name: 'ISLAND BROOK',
-                id: '5378',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 48.5,
-                lon: -81.33,
-                name: 'TIMMINS',
-                id: '4179',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 42.9,
-                lon: -81.7,
-                name: 'METCALFE',
-                id: '4795',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 48.58,
-                lon: -78.17,
-                name: 'LA FERME',
-                id: '6046',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 50.25,
-                lon: -63.58,
-                name: 'HAVRE ST PIERRE',
-                id: '5691',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 45.47,
-                lon: -73.63,
-                name: 'MONTREAL LOYOLA',
-                id: '5419',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 45.32,
-                lon: -79.25,
-                name: 'HUNTSVILLE',
-                id: '4459',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.22,
-                lon: -72.5,
-                name: 'KNOWLTON',
-                id: '5382',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 45.35,
-                lon: -79.32,
-                name: 'HUNTSVILLE TAWINGO',
-                id: '4461',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.23,
-                lon: -75.68,
-                name: 'MANOTICK',
-                id: '4313',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 46.05,
-                lon: -71.97,
-                name: 'VICTORIAVILLE',
-                id: '5565',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 48.88,
-                lon: -87.53,
-                name: 'PAYS PLAT FORESTRY',
-                id: '4037',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 48.43,
-                lon: -89.22,
-                name: 'PORT ARTHUR',
-                id: '4039',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 50.7,
-                lon: -59.32,
-                name: 'TETE A LA BALEINE',
-                id: '5746',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 45.3,
-                lon: -75.52,
-                name: 'GLOUCESTER RCN',
-                id: '4282',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.6,
-                lon: -79.57,
-                name: 'BURKS FALLS',
-                id: '4425',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.42,
-                lon: -71.48,
-                name: 'STATTON BROOK NORTH',
-                id: '5304',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 43.98,
-                lon: -77.25,
-                name: 'BLOOMFIELD WEST',
-                id: '4863',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 44.97,
-                lon: -76.62,
-                name: 'DALHOUSIE L HIGH FALLS',
-                id: '4263',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 49.17,
-                lon: -69.23,
-                name: 'LABRIEVILLE B2',
-                id: '5695',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 48.5,
-                lon: -68.48,
-                name: 'POINTE AU PERE',
-                id: '5831',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 49.22,
-                lon: -68.15,
-                name: 'BAIE COMEAU CBA',
-                id: '5663',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 46.07,
-                lon: -73.37,
-                name: 'STE ELIZABETH',
-                id: '5270',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 44.28,
-                lon: -79.85,
-                name: 'ANGUS CAMPHILL',
-                id: '27001',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.93,
-                lon: -71.63,
-                name: 'HAM NORD',
-                id: '5370',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 46.13,
-                lon: -79.53,
-                name: 'NIPISSING',
-                id: '4478',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 46.3,
-                lon: -72.06,
-                name: 'VILLEROY (STE-FRANCOISE)',
-                id: '10812',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 47.22,
-                lon: -61.97,
-                name: 'AMHERST ISLAND CDA EPF',
-                id: '5760',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 47.35,
-                lon: -70.03,
-                name: 'LA POCATIERE CDA',
-                id: '5806',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 43.25,
-                lon: -81.85,
-                name: 'PINERY',
-                id: '4585',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 49.15,
-                lon: -71.18,
-                name: 'RIVIERE JOLY',
-                id: '5933',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 46.77,
-                lon: -71.22,
-                name: 'ST ROMUALD',
-                id: '5512',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 48.22,
-                lon: -78.87,
-                name: 'RIVIERE KINOJEVIS',
-                id: '5998',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 48.75,
-                lon: -80.58,
-                name: 'TWIN FALLS',
-                id: '4182',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 44.2,
-                lon: -79.57,
-                name: 'GILFORD',
-                id: '4449',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 42.55,
-                lon: -80.05,
-                name: 'LONG POINT',
-                id: '4651',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.52,
-                lon: -73.67,
-                name: 'ST LAURENT (COLLEGE)',
-                id: '5499',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 44.55,
-                lon: -79.67,
-                name: 'HORSESHOE VALLEY',
-                id: '4458',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 44.22,
-                lon: -79.43,
-                name: 'KESWICK',
-                id: '4464',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 44.55,
-                lon: -80.45,
-                name: 'THORNBURY MATTS MOTEL',
-                id: '4518',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 47.73,
-                lon: -69.98,
-                name: 'ST FIDELE 2',
-                id: '5734',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 44.3,
-                lon: -77.8,
-                name: 'CAMPBELLFORD',
-                id: '4892',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.65,
-                lon: -70.73,
-                name: 'AUDET',
-                id: '5312',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 49.3,
-                lon: -88.8,
-                name: 'BLACK STURGEON LAKE 2',
-                id: '3991',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 49.3,
-                lon: -73.85,
-                name: 'AIGREMONT',
-                id: '5886',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 43.8,
-                lon: -81.38,
-                name: 'BELGRAVE',
-                id: '4543',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 43.3,
-                lon: -79.8,
-                name: 'BURLINGTON PIERS (AUT)',
-                id: '7868',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 42.67,
-                lon: -82.02,
-                name: 'BLENHEIM',
-                id: '4544',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 48.78,
-                lon: -94.05,
-                name: 'STRATTON',
-                id: '3948',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.57,
-                lon: -77.42,
-                name: 'KILLALOE',
-                id: '4293',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.45,
-                lon: -75.63,
-                name: 'OTTAWA ROCKCLIFFE A',
-                id: '4344',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 44.18,
-                lon: -77.07,
-                name: 'DESERONTO',
-                id: '4914',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 44.12,
-                lon: -77.5,
-                name: 'TRENTON DOMTAR',
-                id: '5127',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 49.42,
-                lon: -76.45,
-                name: 'MIQUELON',
-                id: '6055',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 50.08,
-                lon: -67.95,
-                name: 'TOULNUSTOUC',
-                id: '5655',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 46.43,
-                lon: -80.32,
-                name: 'WARREN',
-                id: '4136',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 48.45,
-                lon: -89.17,
-                name: 'THUNDER BAY PROVINCIAL PAPER',
-                id: '3978',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.43,
-                lon: -75.35,
-                name: 'SARSFIELD',
-                id: '4380',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 48.92,
-                lon: -80.12,
-                name: 'LOWBUSH',
-                id: '4160',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 44.25,
-                lon: -78.43,
-                name: 'IDA',
-                id: '4948',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 47.33,
-                lon: -85.83,
-                name: 'CARIBOU ISLAND',
-                id: '3996',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 47.77,
-                lon: -78.3,
-                name: 'RAPIDE-SEPT',
-                id: '5994',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 48.73,
-                lon: -80.8,
-                name: 'PORQUIS JUNCTION A',
-                id: '4175',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 48.21,
-                lon: -78.84,
-                name: 'ROUYN-NORANDA A',
-                id: '50090',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 45.3,
-                lon: -72.63,
-                name: 'BROMONT',
-                id: '5326',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 45.03,
-                lon: -79.0,
-                name: 'VANKOUGHNET',
-                id: '4527',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 43.85,
-                lon: -79.05,
-                name: 'PICKERING',
-                id: '5001',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.97,
-                lon: -71.6,
-                name: 'ST FORTUNAT',
-                id: '5466',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 48.95,
-                lon: -65.52,
-                name: 'MURDOCHVILLE',
-                id: '5818',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 46.22,
-                lon: -79.13,
-                name: 'BONFIELD',
-                id: '4186',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.15,
-                lon: -74.47,
-                name: 'LANCASTER',
-                id: '4303',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 50.65,
-                lon: -68.73,
-                name: 'MANIC 5',
-                id: '5704',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 43.18,
-                lon: -79.4,
-                name: 'VINELAND STATION',
-                id: '4703',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 43.0,
-                lon: -82.42,
-                name: 'SARNIA WATERWORKS',
-                id: '4591',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 45.03,
-                lon: -74.72,
-                name: 'CORNWALL ST LHS',
-                id: '4259',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 48.55,
-                lon: -93.52,
-                name: 'FORT FRANCES CDA EPF',
-                id: '3940',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 43.83,
-                lon: -79.08,
-                name: 'PICKERING FIRE HALL #5',
-                id: '5004',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 61.05,
-                lon: -69.62,
-                name: 'QUAQTAQ A',
-                id: '54060',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 45.27,
-                lon: -72.67,
-                name: 'LAC BROMONT',
-                id: '5383',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 46.38,
-                lon: -70.7,
-                name: 'CRANBOURNE',
-                id: '5344',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 62.42,
-                lon: -77.93,
-                name: 'IVUJIVIK A',
-                id: '54066',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 45.4,
-                lon: -71.58,
-                name: 'PETIT LAC',
-                id: '5430',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 43.72,
-                lon: -79.22,
-                name: 'SCARBOROUGH JUNCTION',
-                id: '5028',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 47.77,
-                lon: -73.9,
-                name: 'BGE C LAC CHATEAUVERT',
-                id: '5948',
-                province: 'QUEBEC'
-            },
-
-            {
-                lat: 43.32,
-                lon: -79.87,
-                name: 'ALDERSHOT',
-                id: '4852',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 43.72,
-                lon: -79.32,
-                name: 'TORONTO BERMONDSEY',
-                id: '5056',
-                province: 'ONTARIO'
-            },
-
-            {
-                lat: 48.77,
-                lon: -72.72,
-                name: 'LA DORE',
-                id: '5881',
-                province: 'QUEBEC'
-            },
-
+            { lat: 46.82, lon: -70.75, name: 'ST RAPHAEL', id: '5869', province: 'QUEBEC' },
+            { lat: 43.22, lon: -79.63, name: 'WINONA', id: '4720', province: 'ONTARIO' },
+            { lat: 48.78, lon: -71.85, name: 'CHUTE A LA SAVANE', id: '5899', province: 'QUEBEC' },
+            { lat: 43.83, lon: -79.35, name: 'MARKHAM WATERWORKS', id: '4968', province: 'ONTARIO' },
+            { lat: 43.87, lon: -79.48, name: 'MAPLE', id: '4962', province: 'ONTARIO' },
+            { lat: 44.77, lon: -79.7, name: 'WAUBAUSHENE', id: '4535', province: 'ONTARIO' },
+            { lat: 48.6, lon: -85.28, name: 'WHITE RIVER', id: '4104', province: 'ONTARIO' },
+            { lat: 45.38, lon: -75.75, name: 'OTTAWA ALTA VISTA', id: '4329', province: 'ONTARIO' },
+            { lat: 44.72, lon: -81.28, name: 'OLIPHANT', id: '10087', province: 'ONTARIO' },
+            { lat: 43.45, lon: -80.48, name: 'KITCHENER CITY ENG 2', id: '4783', province: 'ONTARIO' },
+            { lat: 45.8, lon: -79.42, name: 'UPLANDS', id: '4526', province: 'ONTARIO' },
+            { lat: 45.82, lon: -76.75, name: 'FORT COULONGE', id: '5589', province: 'QUEBEC' },
+            { lat: 45.38, lon: -71.47, name: 'ISLAND BROOK', id: '5378', province: 'QUEBEC' },
+            { lat: 48.5, lon: -81.33, name: 'TIMMINS', id: '4179', province: 'ONTARIO' },
+            { lat: 42.9, lon: -81.7, name: 'METCALFE', id: '4795', province: 'ONTARIO' },
+            { lat: 48.58, lon: -78.17, name: 'LA FERME', id: '6046', province: 'QUEBEC' },
+            { lat: 50.25, lon: -63.58, name: 'HAVRE ST PIERRE', id: '5691', province: 'QUEBEC' },
+            { lat: 45.47, lon: -73.63, name: 'MONTREAL LOYOLA', id: '5419', province: 'QUEBEC' },
+            { lat: 45.32, lon: -79.25, name: 'HUNTSVILLE', id: '4459', province: 'ONTARIO' },
+            { lat: 45.22, lon: -72.5, name: 'KNOWLTON', id: '5382', province: 'QUEBEC' },
+            { lat: 45.35, lon: -79.32, name: 'HUNTSVILLE TAWINGO', id: '4461', province: 'ONTARIO' },
+            { lat: 45.23, lon: -75.68, name: 'MANOTICK', id: '4313', province: 'ONTARIO' },
+            { lat: 46.05, lon: -71.97, name: 'VICTORIAVILLE', id: '5565', province: 'QUEBEC' },
+            { lat: 48.88, lon: -87.53, name: 'PAYS PLAT FORESTRY', id: '4037', province: 'ONTARIO' },
+            { lat: 48.43, lon: -89.22, name: 'PORT ARTHUR', id: '4039', province: 'ONTARIO' },
+            { lat: 50.7, lon: -59.32, name: 'TETE A LA BALEINE', id: '5746', province: 'QUEBEC' },
+            { lat: 45.3, lon: -75.52, name: 'GLOUCESTER RCN', id: '4282', province: 'ONTARIO' },
+            { lat: 45.6, lon: -79.57, name: 'BURKS FALLS', id: '4425', province: 'ONTARIO' },
+            { lat: 45.42, lon: -71.48, name: 'STATTON BROOK NORTH', id: '5304', province: 'QUEBEC' },
+            { lat: 43.98, lon: -77.25, name: 'BLOOMFIELD WEST', id: '4863', province: 'ONTARIO' },
+            { lat: 44.97, lon: -76.62, name: 'DALHOUSIE L HIGH FALLS', id: '4263', province: 'ONTARIO' },
+            { lat: 49.17, lon: -69.23, name: 'LABRIEVILLE B2', id: '5695', province: 'QUEBEC' },
+            { lat: 48.5, lon: -68.48, name: 'POINTE AU PERE', id: '5831', province: 'QUEBEC' },
+            { lat: 49.22, lon: -68.15, name: 'BAIE COMEAU CBA', id: '5663', province: 'QUEBEC' },
+            { lat: 46.07, lon: -73.37, name: 'STE ELIZABETH', id: '5270', province: 'QUEBEC' },
+            { lat: 44.28, lon: -79.85, name: 'ANGUS CAMPHILL', id: '27001', province: 'ONTARIO' },
+            { lat: 45.93, lon: -71.63, name: 'HAM NORD', id: '5370', province: 'QUEBEC' },
+            { lat: 46.13, lon: -79.53, name: 'NIPISSING', id: '4478', province: 'ONTARIO' },
+            { lat: 46.3, lon: -72.06, name: 'VILLEROY (STE-FRANCOISE)', id: '10812', province: 'QUEBEC' },
+            { lat: 47.22, lon: -61.97, name: 'AMHERST ISLAND CDA EPF', id: '5760', province: 'QUEBEC' },
+            { lat: 47.35, lon: -70.03, name: 'LA POCATIERE CDA', id: '5806', province: 'QUEBEC' },
+            { lat: 43.25, lon: -81.85, name: 'PINERY', id: '4585', province: 'ONTARIO' },
+            { lat: 49.15, lon: -71.18, name: 'RIVIERE JOLY', id: '5933', province: 'QUEBEC' },
+            { lat: 46.77, lon: -71.22, name: 'ST ROMUALD', id: '5512', province: 'QUEBEC' },
+            { lat: 48.22, lon: -78.87, name: 'RIVIERE KINOJEVIS', id: '5998', province: 'QUEBEC' },
+            { lat: 48.75, lon: -80.58, name: 'TWIN FALLS', id: '4182', province: 'ONTARIO' },
+            { lat: 44.2, lon: -79.57, name: 'GILFORD', id: '4449', province: 'ONTARIO' },
+            { lat: 42.55, lon: -80.05, name: 'LONG POINT', id: '4651', province: 'ONTARIO' },
+            { lat: 45.52, lon: -73.67, name: 'ST LAURENT (COLLEGE)', id: '5499', province: 'QUEBEC' },
+            { lat: 44.55, lon: -79.67, name: 'HORSESHOE VALLEY', id: '4458', province: 'ONTARIO' },
+            { lat: 44.22, lon: -79.43, name: 'KESWICK', id: '4464', province: 'ONTARIO' },
+            { lat: 44.55, lon: -80.45, name: 'THORNBURY MATTS MOTEL', id: '4518', province: 'ONTARIO' },
+            { lat: 47.73, lon: -69.98, name: 'ST FIDELE 2', id: '5734', province: 'QUEBEC' },
+            { lat: 44.3, lon: -77.8, name: 'CAMPBELLFORD', id: '4892', province: 'ONTARIO' },
+            { lat: 45.65, lon: -70.73, name: 'AUDET', id: '5312', province: 'QUEBEC' },
+            { lat: 49.3, lon: -88.8, name: 'BLACK STURGEON LAKE 2', id: '3991', province: 'ONTARIO' },
+            { lat: 49.3, lon: -73.85, name: 'AIGREMONT', id: '5886', province: 'QUEBEC' },
+            { lat: 43.8, lon: -81.38, name: 'BELGRAVE', id: '4543', province: 'ONTARIO' },
+            { lat: 43.3, lon: -79.8, name: 'BURLINGTON PIERS (AUT)', id: '7868', province: 'ONTARIO' },
+            { lat: 42.67, lon: -82.02, name: 'BLENHEIM', id: '4544', province: 'ONTARIO' },
+            { lat: 48.78, lon: -94.05, name: 'STRATTON', id: '3948', province: 'ONTARIO' },
+            { lat: 45.57, lon: -77.42, name: 'KILLALOE', id: '4293', province: 'ONTARIO' },
+            { lat: 45.45, lon: -75.63, name: 'OTTAWA ROCKCLIFFE A', id: '4344', province: 'ONTARIO' },
+            { lat: 44.18, lon: -77.07, name: 'DESERONTO', id: '4914', province: 'ONTARIO' },
+            { lat: 44.12, lon: -77.5, name: 'TRENTON DOMTAR', id: '5127', province: 'ONTARIO' },
+            { lat: 49.42, lon: -76.45, name: 'MIQUELON', id: '6055', province: 'QUEBEC' },
+            { lat: 50.08, lon: -67.95, name: 'TOULNUSTOUC', id: '5655', province: 'QUEBEC' },
+            { lat: 46.43, lon: -80.32, name: 'WARREN', id: '4136', province: 'ONTARIO' },
+            { lat: 48.45, lon: -89.17, name: 'THUNDER BAY PROVINCIAL PAPER', id: '3978', province: 'ONTARIO' },
+            { lat: 45.43, lon: -75.35, name: 'SARSFIELD', id: '4380', province: 'ONTARIO' },
+            { lat: 48.92, lon: -80.12, name: 'LOWBUSH', id: '4160', province: 'ONTARIO' },
+            { lat: 44.25, lon: -78.43, name: 'IDA', id: '4948', province: 'ONTARIO' },
+            { lat: 47.33, lon: -85.83, name: 'CARIBOU ISLAND', id: '3996', province: 'ONTARIO' },
+            { lat: 47.77, lon: -78.3, name: 'RAPIDE-SEPT', id: '5994', province: 'QUEBEC' },
+            { lat: 48.73, lon: -80.8, name: 'PORQUIS JUNCTION A', id: '4175', province: 'ONTARIO' },
+            { lat: 45.3, lon: -72.63, name: 'BROMONT', id: '5326', province: 'QUEBEC' },
+            { lat: 45.03, lon: -79.0, name: 'VANKOUGHNET', id: '4527', province: 'ONTARIO' },
+            { lat: 43.85, lon: -79.05, name: 'PICKERING', id: '5001', province: 'ONTARIO' },
+            { lat: 45.97, lon: -71.6, name: 'ST FORTUNAT', id: '5466', province: 'QUEBEC' },
+            { lat: 48.95, lon: -65.52, name: 'MURDOCHVILLE', id: '5818', province: 'QUEBEC' },
+            { lat: 46.22, lon: -79.13, name: 'BONFIELD', id: '4186', province: 'ONTARIO' },
+            { lat: 45.15, lon: -74.47, name: 'LANCASTER', id: '4303', province: 'ONTARIO' },
+            { lat: 50.65, lon: -68.73, name: 'MANIC 5', id: '5704', province: 'QUEBEC' },
+            { lat: 43.18, lon: -79.4, name: 'VINELAND STATION', id: '4703', province: 'ONTARIO' },
+            { lat: 43.0, lon: -82.42, name: 'SARNIA WATERWORKS', id: '4591', province: 'ONTARIO' },
+            { lat: 45.03, lon: -74.72, name: 'CORNWALL ST LHS', id: '4259', province: 'ONTARIO' },
+            { lat: 48.55, lon: -93.52, name: 'FORT FRANCES CDA EPF', id: '3940', province: 'ONTARIO' },
+            { lat: 43.83, lon: -79.08, name: 'PICKERING FIRE HALL #5', id: '5004', province: 'ONTARIO' },
+            { lat: 61.05, lon: -69.62, name: 'QUAQTAQ A', id: '54060', province: 'QUEBEC' },
+            { lat: 45.27, lon: -72.67, name: 'LAC BROMONT', id: '5383', province: 'QUEBEC' },
+            { lat: 46.38, lon: -70.7, name: 'CRANBOURNE', id: '5344', province: 'QUEBEC' },
+            { lat: 62.42, lon: -77.93, name: 'IVUJIVIK A', id: '54066', province: 'QUEBEC' },
+            { lat: 45.4, lon: -71.58, name: 'PETIT LAC', id: '5430', province: 'QUEBEC' },
+            { lat: 43.72, lon: -79.22, name: 'SCARBOROUGH JUNCTION', id: '5028', province: 'ONTARIO' },
+            { lat: 47.77, lon: -73.9, name: 'BGE C LAC CHATEAUVERT', id: '5948', province: 'QUEBEC' },
+            { lat: 43.32, lon: -79.87, name: 'ALDERSHOT', id: '4852', province: 'ONTARIO' },
+            { lat: 43.72, lon: -79.32, name: 'TORONTO BERMONDSEY', id: '5056', province: 'ONTARIO' },
+            { lat: 48.77, lon: -72.72, name: 'LA DORE', id: '5881', province: 'QUEBEC' }
         ];
 
         // Add failed stations to map (smaller red markers)
@@ -1465,39 +573,29 @@
                 fillOpacity: 0.7
             }).addTo(map);
 
-            var popupContent = `
-                <div style="min-width: 200px;">
-                    <h3 style="margin-bottom: 10px; color: #e74c3c;">
-                        ${station.name}
-                    </h3>
-                    <p><strong>ID:</strong> ${station.id}</p>
-                    <p><strong>Province:</strong> ${station.province}</p>
-                    <p style="color: #e74c3c; font-weight: bold;">STATUS: INACTIVE</p>
-                    <p style="margin-top: 10px; font-size: 0.9em; color: #7f8c8d;">
-                        Part of 1,410 failed stations in full network audit
-                    </p>
-                </div>
-            `;
+            var popupContent = '<div style="min-width: 200px;">' +
+                '<h3 style="margin-bottom: 10px; color: #e74c3c;">' + station.name + '</h3>' +
+                '<p><strong>ID:</strong> ' + station.id + '</p>' +
+                '<p><strong>Province:</strong> ' + station.province + '</p>' +
+                '<p style="color: #e74c3c; font-weight: bold;">STATUS: INACTIVE</p>' +
+                '<p style="margin-top: 10px; font-size: 0.9em; color: #7f8c8d;">Part of 1,812 failed stations in full network audit</p>' +
+                '</div>';
 
             marker.bindPopup(popupContent);
 
-            // Enhanced hover effects - AUTO OPEN popup on hover!
             marker.on('mouseover', function(e) {
                 this.setRadius(12);
                 this.setStyle({ weight: 3 });
-                this.openPopup();  // ← AUTO-OPEN popup on hover!
+                this.openPopup();
             });
 
             marker.on('mouseout', function() {
                 this.setRadius(8);
                 this.setStyle({ weight: 2 });
-                // Popup closes automatically when mouse leaves
             });
         });
 
-        console.log('Added ' + failedStations.length + ' failed stations to show true scale of crisis');
-
-        // Create ULTRA-VISIBLE pin markers for MAJOR stations (on top)
+        // Add major stations (larger markers on top)
         majorStations.forEach(function(station) {
             var color = station.status === 'ACTIVE' ? '#00ff00' : '#ff0000';
 
@@ -1510,40 +608,31 @@
                 fillOpacity: 0.9
             }).addTo(map);
 
-            var popupContent = `
-                <div style="min-width: 220px;">
-                    <h3 style="margin-bottom: 10px; color: ${station.status === 'ACTIVE' ? '#27ae60' : '#e74c3c'};">
-                        ${station.name}
-                    </h3>
-                    <p><strong>ID:</strong> ${station.id}</p>
-                    <p><strong>Province:</strong> ${station.province}</p>
-                    <p><strong>Status:</strong> <span style="color: ${station.status === 'ACTIVE' ? '#27ae60' : '#e74c3c'}; font-weight: bold;">
-                        ${station.status}
-                    </span></p>
-                    <p style="margin-top: 10px; font-size: 0.9em; color: #7f8c8d;">
-                        Part of 23-station strategic audit
-                    </p>
-                </div>
-            `;
+            var statusColor = station.status === 'ACTIVE' ? '#27ae60' : '#e74c3c';
+            var popupContent = '<div style="min-width: 220px;">' +
+                '<h3 style="margin-bottom: 10px; color: ' + statusColor + ';">' + station.name + '</h3>' +
+                '<p><strong>ID:</strong> ' + station.id + '</p>' +
+                '<p><strong>Province:</strong> ' + station.province + '</p>' +
+                '<p><strong>Status:</strong> <span style="color: ' + statusColor + '; font-weight: bold;">' + station.status + '</span></p>' +
+                '<p style="margin-top: 10px; font-size: 0.9em; color: #7f8c8d;">Part of 21-station strategic audit</p>' +
+                '</div>';
 
             marker.bindPopup(popupContent);
 
-            // Enhanced hover effects - AUTO OPEN popup!
             marker.on('mouseover', function(e) {
                 this.setRadius(20);
                 this.setStyle({ weight: 4 });
-                this.openPopup();  // ← AUTO-OPEN popup on hover!
+                this.openPopup();
             });
 
             marker.on('mouseout', function() {
                 this.setRadius(15);
                 this.setStyle({ weight: 3 });
-                // Popup closes automatically when mouse leaves
             });
         });
 
-        console.log('Comprehensive crisis dashboard loaded with ' + majorStations.length + ' major stations');
-        console.log('Full network data: 2,000 stations tested, {failure_rate:.1f}% failure rate');
+        console.log('December 2025 Crisis Dashboard loaded - 69.9% network failure confirmed');
+        });
     </script>
 </body>
 </html>
