@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Environment Canada Weather Station Network Monitor</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+        
+        .alert-banner {
+            background: #f39c12;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-active { color: #27ae60; }
+        .stat-inactive { color: #e74c3c; }
+        .stat-failure { color: #c0392b; }
+        
+        .map-container {
+            padding: 30px;
+        }
+        
+        #map {
+            height: 600px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .legend {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .legend-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 0.95em;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid #333;
+        }
+        
+        .legend-green { background-color: #27ae60; }
+        .legend-yellow { background-color: #f39c12; }
+        .legend-red { background-color: #e74c3c; }
+        
+        .custom-pin-marker {
+            background: transparent !important;
+            border: none !important;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .custom-pin-marker:hover {
+            transform: scale(1.2) translateY(-5px);
+            z-index: 1000 !important;
+        }
+        
+        .province-section {
+            padding: 30px;
+            border-top: 2px solid #ecf0f1;
+        }
+        
+        .province-title {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .station-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .station-card {
+            background: white;
+            border: 2px solid;
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s;
+        }
+        
+        .station-card.active { border-color: #27ae60; background: #e8f8f5; }
+        .station-card.degraded { border-color: #f39c12; background: #fef5e7; }
+        .station-card.failed { border-color: #e74c3c; background: #fadbd8; }
+        
+        .station-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .station-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        
+        .station-id {
+            color: #7f8c8d;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+        
+        .station-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        
+        .status-active { background: #27ae60; color: white; }
+        .status-degraded { background: #f39c12; color: white; }
+        .status-failed { background: #e74c3c; color: white; }
+        
+        .footer {
+            background: #34495e;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .update-info {
+            background: #ecf0f1;
+            padding: 15px;
+            margin: 20px 30px;
+            border-radius: 10px;
+            text-align: center;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #ecf0f1;
+            padding: 0 30px;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #7f8c8d;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            background: rgba(255,255,255,0.5);
+        }
+        
+        .tab.active {
+            background: white;
+            color: #2c3e50;
+            border-top: 3px solid #3498db;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .station-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌦️ Environment Canada Weather Station Network Monitor</h1>
+            <p>Ontario & Quebec - Real-time Network Status</p>
+        </div>
+        
+        <div class="alert-banner">
+            ⚠️ CRITICAL: 52.2% of monitored stations are non-functional
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total Stations</div>
+                <div class="stat-number">23</div>
+                <div class="stat-label">Monitored</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Active Stations</div>
+                <div class="stat-number stat-active">11</div>
+                <div class="stat-label">47.8% Working</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Inactive Stations</div>
+                <div class="stat-number stat-inactive">12</div>
+                <div class="stat-label">52.2% Failed</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Ontario Failure Rate</div>
+                <div class="stat-number stat-failure">46.2%</div>
+                <div class="stat-label">6/13 Down</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-label">Quebec Failure Rate</div>
+                <div class="stat-number stat-failure">60.0%</div>
+                <div class="stat-label">6/10 Down</div>
+            </div>
+        </div>
+        
+        <div class="update-info">
+            Last Updated: November 10, 2025 at 18:15
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('map')">📍 Interactive Map</button>
+            <button class="tab" onclick="showTab('ontario')">Ontario Stations</button>
+            <button class="tab" onclick="showTab('quebec')">Quebec Stations</button>
+            <button class="tab" onclick="showTab('about')">ℹ️ About</button>
+        </div>
+        
+        <div id="map-tab" class="tab-content active">
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </div>
+        
+        <div id="ontario-tab" class="tab-content">
+            <div class="province-section">
+                <h2 class="province-title">Ontario Weather Stations</h2>
+                <div class="station-grid">
+
+                    <div class="station-card active">
+                        <div class="station-name">HAMILTON A</div>
+                        <div class="station-id">ID: 49908</div>
+                        <div>Quality Score: 100%</div>
+                        <div class="station-status status-active">✅ ACTIVE</div>
+                    </div>
+
+                    <div class="station-card failed">
+                        <div class="station-name">KENORA A</div>
+                        <div class="station-id">ID: 49069</div>
+                        <div>Quality Score: 0%</div>
+                        <div class="station-status status-failed">❌ INACTIVE</div>
+                    </div>
+
+                    <div class="station-card active">
+                        <div class="station-name">KINGSTON A</div>
+                        <div class="station-id">ID: 27141</div>
+                        <div>Quality Score: 100%</div>
+                        <div class="station-status status-active">✅ ACTIVE</div>
+                    </div>
+
+                    <div class="station-card active">
+                        <div class="station-name">LONDON A</div>
+                        <div class="station-id">ID: 4789</div>
+                        <div>Quality Score: 100%</div>
+                        <div class="station-status status-active">✅ ACTIVE</div>
+                    </div>
+
+                    <div class="station-card failed">
+                        <div class="station-name">MOOSONEE UA</div>
+                        <div class="station-id">ID: 49000</div>
+                        <div>Quality Score: 0%</div>
+                        <div class="station-status status-failed">❌ INACTIVE</div>
+                    </div>
+
+                    <div class="station-card failed">
+                        <div class="station-name">NORTH BAY A</div>
+                        <div class="station-id">ID: 49789</div>
+                        <div>Quality Score: 0%</div>
+                        <div class="station-status status-failed">❌ INACTIVE</div>
+                    </div>
+
+                    <div class="station-card active">
+                        <div class="station-name">OTTAWA CDA</div>
+                        <div class="station-id">ID: 49568</div>
+                        <div>Quality Score: 100%</div>
+                        <div class="station-status status-active">✅ ACTIVE</div>
+                    </div>
+
+                    <div class="station-card failed">
+                        <div class="station-name">SAULT STE MARIE A</div>
+                        <div class="station-id">ID: 49346</div>
+                        <div>Quality Score: 0%</div>
+                        <div class="station-status status-failed">❌ INACTIVE</div>
+                    </div>
+
+                    <div class="station-card active">
+                        <div class="station-name">SUDBURY A</div>
+                        <div class="station-id">ID: 41983</div>
+                        <div>Quality Score: 100%</div>
+                        <div class="station-status status-active">✅ ACTIVE</div>
+                    </div>
+
+                    <div class="station-card failed">
+                        <div class="station-name">THUNDER BAY A</div>
+                        <div class="station-id">ID: 48291</div>
+                        <div>Quality Score: 0%</div>
+                        <div class="station-status status-failed">❌ INACTIVE</div>
+                    </div>
+
+                    <div class="station-card failed">
+                        <div class="station-name">TIMMINS VICTOR M POWER</div>
+                        <div class="station-id">ID: 48071</div>
+                        <div>Quality Score: 0%</div>
+                        <div class="station-status status-failed">❌ INACTIVE</div>
+                    </div>
+
+                    <div class="station-card active">
+                        <div class="station-name">TORONTO PEARSON INT'L A</div>
+                        <div class="station-id">ID: 51459</div>
+                        <div>Quality Score: 100%</div>
+                        <div class="station-status status-active">✅ ACTIVE</div>
+                    </div>
+
+                    <div class="station-card active">
+                        <div class="station-name">WINDSOR A</div>
+                        <div class="station-id">ID: 48568</div>
+                        <div>Quality Score: 100%</div>
+                        <div class="station-status status-active">✅ ACTIVE</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <div id="quebec-tab" class="tab-content">
+            <div class="province-section">
+                <h2 class="province-title">Quebec Weather Stations</h2>
+                <div class="station-grid">
+
+                    <div class="station-card active">
+                        <div class="station-name">BAGOTVILLE A</div>
+                        <div class="station-id">ID: 26892</div>
+                        <div>Quality Score: 100%</div>
+                        <div class="station-status status-active">✅ ACTIVE</div>
+                    </div>
+
+                    <div class="station-card failed">
+                        <div class="station-name">GATINEAU</div>
+                        <div class="station-id">ID: 26899</div>
+                        <div>Quality Score: 0%</div>
+                        <div class="station-status status-failed">❌ INACTIVE</div>
+                    </div>
+
+                    <div class="station-card failed">
+                        <div class="station-name">KUUJJUAQ A</div>
+                        <div class="station-id">ID: 26510</div>
+                        <div>Quality Score: 0%</div>
+                        <div class="station-status status-failed">❌ INACTIVE</div>
+                    </div>
+
+                    <div class="station-card active">
+                        <div class="station-name">MONTREAL PIERRE ELLIOTT TRUDEAU INT'L A</div>
+                        <div class="station-id">ID: 51157</div>
+                        <div>Quality Score: 100%</div>
+                        <div class="station-status status-active">✅ ACTIVE</div>
+                    </div>
+
+                    <div class="station-card active">
+                        <div class="station-name">QUEBEC/JEAN LESAGE INT'L A</div>
+                        <div class="station-id">ID: 26892</div>
+                        <div>Quality Score: 100%</div>
+                        <div class="station-status status-active">✅ ACTIVE</div>
+                    </div>
+
+                    <div class="station-card failed">
+                        <div class="station-name">ROUYN-NORANDA A</div>
+                        <div class="station-id">ID: 27051</div>
+                        <div>Quality Score: 0%</div>
+                        <div class="station-status status-failed">❌ INACTIVE</div>
+                    </div>
+
+                    <div class="station-card failed">
+                        <div class="station-name">SEPT-ILES A</div>
+                        <div class="station-id">ID: 26871</div>
+                        <div>Quality Score: 0%</div>
+                        <div class="station-status status-failed">❌ INACTIVE</div>
+                    </div>
+
+                    <div class="station-card failed">
+                        <div class="station-name">SHERBROOKE A</div>
+                        <div class="station-id">ID: 26839</div>
+                        <div>Quality Score: 0%</div>
+                        <div class="station-status status-failed">❌ INACTIVE</div>
+                    </div>
+
+                    <div class="station-card failed">
+                        <div class="station-name">TROIS-RIVIERES A</div>
+                        <div class="station-id">ID: 26976</div>
+                        <div>Quality Score: 0%</div>
+                        <div class="station-status status-failed">❌ INACTIVE</div>
+                    </div>
+
+                    <div class="station-card active">
+                        <div class="station-name">VAL-D'OR A</div>
+                        <div class="station-id">ID: 27083</div>
+                        <div>Quality Score: 100%</div>
+                        <div class="station-status status-active">✅ ACTIVE</div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        
+        <div id="about-tab" class="tab-content">
+            <div class="province-section">
+                <h2 class="province-title">About This Dashboard</h2>
+                
+                <h3 style="margin-top: 30px; color: #2c3e50;">📊 What This Shows</h3>
+                <p style="line-height: 1.8; color: #555; margin: 15px 0;">
+                This dashboard monitors the operational status of Environment Canada's weather station 
+                network across Ontario and Quebec. It provides real-time visibility into which stations 
+                are functioning and which have failed, helping identify systematic infrastructure problems.
+                </p>
+                
+                <h3 style="margin-top: 30px; color: #2c3e50;">🎯 Status Categories</h3>
+                <div style="margin: 20px 0;">
+                    <div style="padding: 15px; background: #e8f8f5; border-left: 4px solid #27ae60; margin: 10px 0;">
+                        <strong>🟢 Active (Green):</strong> Station is transmitting data (Quality Score ≥95%)
+                    </div>
+                    <div style="padding: 15px; background: #fef5e7; border-left: 4px solid #f39c12; margin: 10px 0;">
+                        <strong>🟡 Degraded (Yellow):</strong> Station has partial data (Quality Score 80-94%)
+                    </div>
+                    <div style="padding: 15px; background: #fadbd8; border-left: 4px solid #e74c3c; margin: 10px 0;">
+                        <strong>🔴 Failed (Red):</strong> Station is not transmitting (Quality Score &lt;80%)
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: 30px; color: #2c3e50;">🔬 Methodology</h3>
+                <p style="line-height: 1.8; color: #555; margin: 15px 0;">
+                This analysis is based on systematic testing of Environment Canada's Historical Climate 
+                Data portal. Each station was queried for precipitation and temperature data across 
+                2022-2024, testing multiple months per year. Stations unable to return data for recent 
+                periods are classified as inactive.
+                </p>
+                
+                <h3 style="margin-top: 30px; color: #2c3e50;">📅 Data Collection</h3>
+                <p style="line-height: 1.8; color: #555; margin: 15px 0;">
+                <strong>Collection Date:</strong> November 10, 2025<br>
+                <strong>Stations Tested:</strong> 23 major stations<br>
+                <strong>Data Source:</strong> Environment Canada Historical Climate Data Portal<br>
+                <strong>Testing Period:</strong> 2022-2024 (quarterly checks)
+                </p>
+                
+                <h3 style="margin-top: 30px; color: #2c3e50;">🚨 Critical Findings</h3>
+                <div style="background: #fadbd8; border: 2px solid #e74c3c; padding: 20px; border-radius: 10px; margin: 15px 0;">
+                    <p style="font-size: 1.2em; font-weight: bold; color: #c0392b; margin-bottom: 10px;">
+                        52.2% Failure Rate
+                    </p>
+                    <p style="line-height: 1.6; color: #555;">
+                        This represents a critical failure in Canada's climate monitoring infrastructure 
+                        with serious implications for public safety, agricultural insurance, climate research, 
+                        and Canada's Paris Agreement reporting obligations.
+                    </p>
+                </div>
+                
+                <h3 style="margin-top: 30px; color: #2c3e50;">📄 Full Documentation</h3>
+                <p style="line-height: 1.8; color: #555; margin: 15px 0;">
+                Complete technical reports and raw data are available in the audit results directory:
+                </p>
+                <ul style="line-height: 2; color: #555; margin-left: 30px;">
+                    <li><strong>MP_Evidence_Report.md</strong> - Parliamentary evidence report</li>
+                    <li><strong>station_test_results.csv</strong> - Complete station data</li>
+                    <li><strong>analysis_summary.json</strong> - Statistical summary</li>
+                    <li><strong>audit_log.txt</strong> - Complete audit trail</li>
+                </ul>
+                
+                <h3 style="margin-top: 30px; color: #2c3e50;">👤 Contact</h3>
+                <p style="line-height: 1.8; color: #555; margin: 15px 0;">
+                <strong>Adrian Hernandez-del-Valle, PhD</strong><br>
+                Technology Solutions Consultant<br>
+                Services Communautaires pour Réfugiés et Immigrants (SCRI)<br>
+                Montreal, Quebec<br>
+                Email: soutien_informatique@scrimontreal.onmicrosoft.com<br>
+                Phone: 514-208-5677
+                </p>
+                
+                <h3 style="margin-top: 30px; color: #2c3e50;">⚖️ International Implications</h3>
+                <p style="line-height: 1.8; color: #555; margin: 15px 0;">
+                This infrastructure failure places Canada in potential breach of:
+                </p>
+                <ul style="line-height: 2; color: #555; margin-left: 30px;">
+                    <li>Paris Agreement Article 13 (transparency framework)</li>
+                    <li>UNFCCC reporting requirements</li>
+                    <li>World Meteorological Organization (WMO) standards</li>
+                    <li>G7 climate monitoring commitments</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Environment Canada Weather Station Network Monitor</strong></p>
+            <p style="margin: 10px 0;">Prepared for MP Rachel Bendayan's Office</p>
+            <p style="margin: 10px 0;">Adrian Hernandez-del-Valle, PhD | SCRI Montreal</p>
+            <p style="margin: 10px 0; font-size: 0.9em; opacity: 0.8;">
+                Dashboard generated: November 10, 2025 at 18:15
+            </p>
+            <p style="margin-top: 20px; font-size: 0.85em; opacity: 0.7;">
+                Data source: Environment Canada Historical Climate Data Portal (climate.weather.gc.ca)
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Initialize map
+        var map = L.map('map').setView([48.0, -80.0], 5);
+        
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(map);
+        
+        // Add legend
+        var legend = L.control({position: 'bottomright'});
+        
+        legend.onAdd = function(map) {
+            var div = L.DomUtil.create('div', 'legend');
+            div.innerHTML = `
+                <div class="legend-title">Station Status</div>
+                <div class="legend-item">
+                    <div class="legend-color legend-green"></div>
+                    <span>Active (≥95% data)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-yellow"></div>
+                    <span>Degraded (80-94%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-red"></div>
+                    <span>Failed (&lt;80%)</span>
+                </div>
+            `;
+            return div;
+        };
+        
+        legend.addTo(map);
+        
+        // Station data
+        var stations = [
+
+            {
+                lat: 43.68,
+                lon: -79.63,
+                color: 'green',
+                name: 'TORONTO PEARSON INT\'L A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>TORONTO PEARSON INT'L A</h3>
+                    <p><strong>ID:</strong> 51459</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> ACTIVE</p>
+                    <p><strong>Quality Score:</strong> 100%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 45.32,
+                lon: -75.67,
+                color: 'green',
+                name: 'OTTAWA CDA',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>OTTAWA CDA</h3>
+                    <p><strong>ID:</strong> 49568</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> ACTIVE</p>
+                    <p><strong>Quality Score:</strong> 100%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 45.47,
+                lon: -73.74,
+                color: 'green',
+                name: 'MONTREAL PIERRE ELLIOTT TRUDEAU INT\'L A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>MONTREAL PIERRE ELLIOTT TRUDEAU INT'L A</h3>
+                    <p><strong>ID:</strong> 51157</p>
+                    <p><strong>Province:</strong> QUEBEC</p>
+                    <p><strong>Status:</strong> ACTIVE</p>
+                    <p><strong>Quality Score:</strong> 100%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 43.03,
+                lon: -81.15,
+                color: 'green',
+                name: 'LONDON A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>LONDON A</h3>
+                    <p><strong>ID:</strong> 4789</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> ACTIVE</p>
+                    <p><strong>Quality Score:</strong> 100%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 46.79,
+                lon: -71.39,
+                color: 'green',
+                name: 'QUEBEC/JEAN LESAGE INT\'L A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>QUEBEC/JEAN LESAGE INT'L A</h3>
+                    <p><strong>ID:</strong> 26892</p>
+                    <p><strong>Province:</strong> QUEBEC</p>
+                    <p><strong>Status:</strong> ACTIVE</p>
+                    <p><strong>Quality Score:</strong> 100%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 48.37,
+                lon: -89.32,
+                color: 'red',
+                name: 'THUNDER BAY A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>THUNDER BAY A</h3>
+                    <p><strong>ID:</strong> 48291</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> INACTIVE</p>
+                    <p><strong>Quality Score:</strong> 0%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 46.62,
+                lon: -80.8,
+                color: 'green',
+                name: 'SUDBURY A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>SUDBURY A</h3>
+                    <p><strong>ID:</strong> 41983</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> ACTIVE</p>
+                    <p><strong>Quality Score:</strong> 100%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 42.28,
+                lon: -82.96,
+                color: 'green',
+                name: 'WINDSOR A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>WINDSOR A</h3>
+                    <p><strong>ID:</strong> 48568</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> ACTIVE</p>
+                    <p><strong>Quality Score:</strong> 100%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 46.48,
+                lon: -84.51,
+                color: 'red',
+                name: 'SAULT STE MARIE A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>SAULT STE MARIE A</h3>
+                    <p><strong>ID:</strong> 49346</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> INACTIVE</p>
+                    <p><strong>Quality Score:</strong> 0%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 46.36,
+                lon: -79.42,
+                color: 'red',
+                name: 'NORTH BAY A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>NORTH BAY A</h3>
+                    <p><strong>ID:</strong> 49789</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> INACTIVE</p>
+                    <p><strong>Quality Score:</strong> 0%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 44.23,
+                lon: -76.6,
+                color: 'green',
+                name: 'KINGSTON A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>KINGSTON A</h3>
+                    <p><strong>ID:</strong> 27141</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> ACTIVE</p>
+                    <p><strong>Quality Score:</strong> 100%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 43.17,
+                lon: -79.93,
+                color: 'green',
+                name: 'HAMILTON A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>HAMILTON A</h3>
+                    <p><strong>ID:</strong> 49908</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> ACTIVE</p>
+                    <p><strong>Quality Score:</strong> 100%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 48.57,
+                lon: -81.38,
+                color: 'red',
+                name: 'TIMMINS VICTOR M POWER',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>TIMMINS VICTOR M POWER</h3>
+                    <p><strong>ID:</strong> 48071</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> INACTIVE</p>
+                    <p><strong>Quality Score:</strong> 0%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 51.29,
+                lon: -80.61,
+                color: 'red',
+                name: 'MOOSONEE UA',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>MOOSONEE UA</h3>
+                    <p><strong>ID:</strong> 49000</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> INACTIVE</p>
+                    <p><strong>Quality Score:</strong> 0%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 49.79,
+                lon: -94.36,
+                color: 'red',
+                name: 'KENORA A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>KENORA A</h3>
+                    <p><strong>ID:</strong> 49069</p>
+                    <p><strong>Province:</strong> ONTARIO</p>
+                    <p><strong>Status:</strong> INACTIVE</p>
+                    <p><strong>Quality Score:</strong> 0%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 45.48,
+                lon: -75.64,
+                color: 'red',
+                name: 'GATINEAU',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>GATINEAU</h3>
+                    <p><strong>ID:</strong> 26899</p>
+                    <p><strong>Province:</strong> QUEBEC</p>
+                    <p><strong>Status:</strong> INACTIVE</p>
+                    <p><strong>Quality Score:</strong> 0%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 45.44,
+                lon: -71.69,
+                color: 'red',
+                name: 'SHERBROOKE A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>SHERBROOKE A</h3>
+                    <p><strong>ID:</strong> 26839</p>
+                    <p><strong>Province:</strong> QUEBEC</p>
+                    <p><strong>Status:</strong> INACTIVE</p>
+                    <p><strong>Quality Score:</strong> 0%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 46.35,
+                lon: -72.68,
+                color: 'red',
+                name: 'TROIS-RIVIERES A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>TROIS-RIVIERES A</h3>
+                    <p><strong>ID:</strong> 26976</p>
+                    <p><strong>Province:</strong> QUEBEC</p>
+                    <p><strong>Status:</strong> INACTIVE</p>
+                    <p><strong>Quality Score:</strong> 0%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 48.05,
+                lon: -77.78,
+                color: 'green',
+                name: 'VAL-D\'OR A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>VAL-D'OR A</h3>
+                    <p><strong>ID:</strong> 27083</p>
+                    <p><strong>Province:</strong> QUEBEC</p>
+                    <p><strong>Status:</strong> ACTIVE</p>
+                    <p><strong>Quality Score:</strong> 100%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 50.22,
+                lon: -66.27,
+                color: 'red',
+                name: 'SEPT-ILES A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>SEPT-ILES A</h3>
+                    <p><strong>ID:</strong> 26871</p>
+                    <p><strong>Province:</strong> QUEBEC</p>
+                    <p><strong>Status:</strong> INACTIVE</p>
+                    <p><strong>Quality Score:</strong> 0%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 48.33,
+                lon: -71.0,
+                color: 'green',
+                name: 'BAGOTVILLE A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>BAGOTVILLE A</h3>
+                    <p><strong>ID:</strong> 26892</p>
+                    <p><strong>Province:</strong> QUEBEC</p>
+                    <p><strong>Status:</strong> ACTIVE</p>
+                    <p><strong>Quality Score:</strong> 100%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 58.1,
+                lon: -68.42,
+                color: 'red',
+                name: 'KUUJJUAQ A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>KUUJJUAQ A</h3>
+                    <p><strong>ID:</strong> 26510</p>
+                    <p><strong>Province:</strong> QUEBEC</p>
+                    <p><strong>Status:</strong> INACTIVE</p>
+                    <p><strong>Quality Score:</strong> 0%</p>
+                </div>
+            `
+            },
+
+            {
+                lat: 48.21,
+                lon: -78.84,
+                color: 'red',
+                name: 'ROUYN-NORANDA A',
+                popup: `
+                <div style='min-width: 200px;'>
+                    <h3 style='margin-bottom: 10px; color: #2c3e50;'>ROUYN-NORANDA A</h3>
+                    <p><strong>ID:</strong> 27051</p>
+                    <p><strong>Province:</strong> QUEBEC</p>
+                    <p><strong>Status:</strong> INACTIVE</p>
+                    <p><strong>Quality Score:</strong> 0%</p>
+                </div>
+            `
+            },
+
+        ];
+        
+        // Create VISIBLE pin markers - SMALLER SIZE, GENTLE HOVER
+        var createPinIcon = function(color) {
+            // Use bright, high-contrast colors
+            var brightColor = color === 'green' ? '#00ff00' : 
+                            (color === 'yellow' ? '#ffff00' : '#ff0000');
+            
+            return L.divIcon({
+                className: 'custom-pin-marker',
+                html: `
+                    <div style="
+                        position: relative;
+                        width: 30px;
+                        height: 30px;
+                        filter: drop-shadow(0 0 8px ${brightColor}) 
+                                drop-shadow(0 0 12px ${brightColor})
+                                drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+                    ">
+                        <svg width="30" height="45" viewBox="0 0 30 45" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Outer glow layer -->
+                            <path d="M15 3 C8 3 3 8 3 15 C3 22 15 42 15 42 C15 42 27 22 27 15 C27 8 22 3 15 3 Z" 
+                                  fill="${brightColor}" 
+                                  opacity="0.3"
+                                  stroke="none"/>
+                            
+                            <!-- Main pin body - THICK black border for maximum contrast -->
+                            <path d="M15 1 C7 1 1 7 1 15 C1 23 15 40 15 40 C15 40 29 23 29 15 C29 7 23 1 15 1 Z" 
+                                  fill="${brightColor}" 
+                                  stroke="#000000" 
+                                  stroke-width="3"/>
+                            
+                            <!-- White outer ring for extra contrast -->
+                            <circle cx="15" cy="15" r="8" 
+                                    fill="#ffffff" 
+                                    stroke="#000000" 
+                                    stroke-width="2"/>
+                            
+                            <!-- Colored center - very bright -->
+                            <circle cx="15" cy="15" r="5" 
+                                    fill="${brightColor}" 
+                                    stroke="#000000" 
+                                    stroke-width="1.5"/>
+                            
+                            <!-- White highlight for 3D effect -->
+                            <circle cx="13" cy="13" r="2" 
+                                    fill="#ffffff" 
+                                    opacity="0.7"/>
+                        </svg>
+                    </div>
+                `,
+                iconSize: [30, 45],
+                iconAnchor: [15, 42],
+                popupAnchor: [0, -42]
+            });
+        };
+        
+        // Add ULTRA-VISIBLE markers to map
+        stations.forEach(function(station) {
+            // Use super bright colors that contrast with any map
+            var markerColor = station.color;
+            
+            var marker = L.marker([station.lat, station.lon], {
+                icon: createPinIcon(markerColor),
+                riseOnHover: true,
+                zIndexOffset: 1000
+            }).addTo(map);
+            
+            marker.bindPopup(station.popup);
+            
+            // Hover to zoom in on location
+            marker.on('mouseover', function(e) {
+                map.flyTo(e.latlng, 9, {
+                    duration: 0.5,
+                    easeLinearity: 0.25
+                });
+                // Open popup automatically on hover
+                this.openPopup();
+            });
+            
+            // Click to zoom in closer
+            marker.on('click', function(e) {
+                map.flyTo(e.latlng, 11, {
+                    duration: 0.8
+                });
+            });
+        });
+        
+        console.log(`Added ${stations.length} highly visible markers to the map!`);
+    </script>
+</body>
+</html>
