@@ -3,636 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canada Weather Station Network Crisis - Comprehensive Analysis</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <title>Canada Weather Network Audit — Dr. Adrian Hernandez-del-Valle</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
+            color: #fff;
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        .header { text-align: center; margin-bottom: 50px; }
+        .header h1 { font-size: 2.5em; margin-bottom: 15px; }
+        .header p { font-size: 1.2em; opacity: 0.8; }
+        .alert-banner {
+            background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
             padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 1.1em;
         }
-
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            background: white;
+        .reports-grid { display: grid; gap: 25px; }
+        .report-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 30px;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s, background 0.3s;
+            display: block;
+        }
+        .report-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.15);
+        }
+        .report-card.latest {
+            border: 2px solid #e74c3c;
+            background: rgba(231, 76, 60, 0.2);
+        }
+        .report-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .report-date { font-size: 1.4em; font-weight: bold; }
+        .report-badge {
+            background: #e74c3c;
+            padding: 5px 12px;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-            overflow: hidden;
+            font-size: 0.8em;
+            font-weight: bold;
         }
-
-        .crisis-header {
-            background: linear-gradient(135deg, #c0392b 0%, #8e44ad 100%);
-            color: white;
-            padding: 40px;
-            text-align: center;
-        }
-
-        .crisis-header h1 {
-            font-size: 3em;
-            margin-bottom: 15px;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-
-        .crisis-header p {
-            font-size: 1.4em;
-            opacity: 0.95;
-        }
-
-        .mega-alert {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-            color: white;
+        .report-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
+        .stat { text-align: center; }
+        .stat-value { font-size: 1.8em; font-weight: bold; color: #e74c3c; }
+        .stat-label { font-size: 0.85em; opacity: 0.7; }
+        .report-scope { opacity: 0.8; font-size: 0.95em; }
+        .methodology {
+            margin-top: 50px;
             padding: 30px;
-            text-align: center;
-            font-size: 2em;
-            font-weight: bold;
-            box-shadow: 0 4px 20px rgba(231, 76, 60, 0.5);
-        }
-
-        .comparison-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-            background: #34495e;
-        }
-
-        .comparison-section {
-            padding: 40px;
-            color: white;
-        }
-
-        .comparison-section.major {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-        }
-
-        .comparison-section.full {
-            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-        }
-
-        .comparison-title {
-            font-size: 2em;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .big-number {
-            font-size: 5em;
-            font-weight: bold;
-            text-align: center;
-            margin: 20px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .sub-stats {
-            font-size: 1.2em;
-            text-align: center;
-            opacity: 0.9;
-            line-height: 2;
-        }
-
-        .stats-mega-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            padding: 40px;
-            background: #ecf0f1;
-        }
-
-        .stat-mega-card {
-            background: white;
-            padding: 30px;
+            background: rgba(255,255,255,0.05);
             border-radius: 15px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-            text-align: center;
-            transition: all 0.3s;
-            border-top: 5px solid;
         }
-
-        .stat-mega-card.critical {
-            border-top-color: #e74c3c;
-        }
-
-        .stat-mega-card.warning {
-            border-top-color: #f39c12;
-        }
-
-        .stat-mega-card.info {
-            border-top-color: #3498db;
-        }
-
-        .stat-mega-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.2);
-        }
-
-        .stat-mega-number {
-            font-size: 3.5em;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-
-        .stat-mega-label {
-            color: #7f8c8d;
-            font-size: 1em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .stat-mega-description {
-            color: #95a5a6;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-
-        .implications-section {
-            padding: 50px;
-            background: linear-gradient(to bottom, #fff 0%, #ecf0f1 100%);
-        }
-
-        .implications-title {
-            font-size: 2.5em;
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .implication-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .implication-card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            border-left: 5px solid;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .implication-card.paris { border-left-color: #e74c3c; }
-        .implication-card.safety { border-left-color: #e67e22; }
-        .implication-card.science { border-left-color: #3498db; }
-        .implication-card.indigenous { border-left-color: #9b59b6; }
-
-        .implication-card h3 {
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            color: #2c3e50;
-        }
-
-        .implication-card p {
-            line-height: 1.8;
-            color: #555;
-        }
-
-        .map-section {
-            padding: 40px;
-            background: white;
-        }
-
-        .map-title {
-            font-size: 2em;
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        #map {
-            height: 700px;
-            border-radius: 15px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-
+        .methodology h2 { margin-bottom: 20px; }
+        .methodology p { margin-bottom: 15px; line-height: 1.7; opacity: 0.9; }
+        .methodology a { color: #3498db; }
         .footer {
-            background: #2c3e50;
-            color: white;
-            padding: 40px;
+            margin-top: 50px;
             text-align: center;
+            padding: 30px;
+            opacity: 0.8;
         }
-
-        .footer h3 {
-            margin-bottom: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .comparison-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .crisis-header h1 {
-                font-size: 2em;
-            }
-
-            .mega-alert {
-                font-size: 1.3em;
-            }
-
-            .big-number {
-                font-size: 3em;
-            }
-        }
+        .footer a { color: #3498db; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="crisis-header">
-            <h1>🚨 CANADA'S WEATHER STATION NETWORK CRISIS</h1>
-            <p>Comprehensive Analysis: System-Wide Collapse Documented</p>
+        <div class="header">
+            <h1>🇨🇦 Canada Weather Network Audit</h1>
+            <p>Independent monitoring of Environment Canada's weather station infrastructure</p>
         </div>
 
-        <div class="mega-alert">
-            ⚠️ CATASTROPHIC: 69.9% OF CANADA'S WEATHER STATIONS ARE NON-FUNCTIONAL
+        <div class="alert-banner">
+            ⚠️ LATEST FINDING: 83.1% of weather stations across AB/ON/QC are non-functional
         </div>
 
-        <div class="comparison-grid">
-            <div class="comparison-section major">
-                <div class="comparison-title">📍 Major Stations Audit</div>
-                <div class="sub-stats">21 Strategic Stations Tested</div>
-                <div class="big-number">4.8%</div>
-                <div class="sub-stats">
-                    Failure Rate<br>
-                    1 of 21 stations offline<br>
-                    Major cities &amp; airports affected
+        <div class="reports-grid">
+            <a href="january-2026/" class="report-card latest">
+                <div class="report-header">
+                    <span class="report-date">📊 January 2026</span>
+                    <span class="report-badge">LATEST</span>
                 </div>
-            </div>
+                <div class="report-stats">
+                    <div class="stat">
+                        <div class="stat-value">83.1%</div>
+                        <div class="stat-label">Failure Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">4,214</div>
+                        <div class="stat-label">Stations Tested</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">3,500</div>
+                        <div class="stat-label">Offline</div>
+                    </div>
+                </div>
+                <div class="report-scope">
+                    <strong>Scope:</strong> Alberta • Ontario • Quebec<br>
+                    <strong>Finding:</strong> Network collapse accelerating — Ontario at 88.9%, Alberta at 82.0%, Quebec at 75.8%
+                </div>
+            </a>
 
-            <div class="comparison-section full">
-                <div class="comparison-title">🌍 Full Network Audit</div>
-                <div class="sub-stats">2594 Stations Tested (100% of Network)</div>
-                <div class="big-number">69.9%</div>
-                <div class="sub-stats">
-                    Failure Rate<br>
-                    1812 of 2594 stations offline<br>
-                    SYSTEM-WIDE COLLAPSE CONFIRMED
+            <a href="december-2025/" class="report-card">
+                <div class="report-header">
+                    <span class="report-date">📊 December 2025</span>
                 </div>
-            </div>
+                <div class="report-stats">
+                    <div class="stat">
+                        <div class="stat-value">69.9%</div>
+                        <div class="stat-label">Failure Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">2,594</div>
+                        <div class="stat-label">Stations Tested</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">1,812</div>
+                        <div class="stat-label">Offline</div>
+                    </div>
+                </div>
+                <div class="report-scope">
+                    <strong>Scope:</strong> Ontario • Quebec<br>
+                    <strong>Finding:</strong> Initial audit establishing baseline — system-wide collapse documented
+                </div>
+            </a>
         </div>
 
-        <div class="stats-mega-grid">
-            <div class="stat-mega-card critical">
-                <div class="stat-mega-label">Total Stations Tested</div>
-                <div class="stat-mega-number">2594</div>
-                <div class="stat-mega-description">Complete network audit</div>
-            </div>
-
-            <div class="stat-mega-card critical">
-                <div class="stat-mega-label">Inactive Stations</div>
-                <div class="stat-mega-number" style="color: #e74c3c;">1812</div>
-                <div class="stat-mega-description">Complete data loss - no transmission</div>
-            </div>
-
-            <div class="stat-mega-card warning">
-                <div class="stat-mega-label">Active But Degraded</div>
-                <div class="stat-mega-number" style="color: #f39c12;">782</div>
-                <div class="stat-mega-description">Transmitting but avg 45.0% data completeness</div>
-            </div>
-
-            <div class="stat-mega-card critical">
-                <div class="stat-mega-label">Ontario Failure</div>
-                <div class="stat-mega-number" style="color: #e74c3c;">72.0%</div>
-                <div class="stat-mega-description">1128 of 1566 stations offline</div>
-            </div>
-
-            <div class="stat-mega-card critical">
-                <div class="stat-mega-label">Quebec Failure</div>
-                <div class="stat-mega-number" style="color: #e74c3c;">66.5%</div>
-                <div class="stat-mega-description">684 of 1028 stations offline</div>
-            </div>
-
-            <div class="stat-mega-card warning">
-                <div class="stat-mega-label">Average Data Quality</div>
-                <div class="stat-mega-number" style="color: #f39c12;">45.0%</div>
-                <div class="stat-mega-description">Even "active" stations missing &gt;55% of data</div>
-            </div>
-        </div>
-
-        <div class="implications-section">
-            <h2 class="implications-title">🌍 International Treaty Violations</h2>
-
-            <div class="implication-grid">
-                <div class="implication-card paris">
-                    <h3>🌡️ Paris Agreement (Article 13)</h3>
-                    <p>
-                        Canada committed to "transparent, accurate, complete, comparable and consistent"
-                        climate monitoring. A 69.9% network failure makes this IMPOSSIBLE. Canada is
-                        in direct breach of its international climate commitments.
-                    </p>
-                </div>
-
-                <div class="implication-card safety">
-                    <h3>⚠️ Public Safety Crisis</h3>
-                    <p>
-                        Weather warnings, severe storm tracking, and emergency preparedness depend on
-                        functional weather stations. This catastrophic failure puts millions of Canadians
-                        at risk during extreme weather events.
-                    </p>
-                </div>
-
-                <div class="implication-card science">
-                    <h3>🔬 Scientific Integrity</h3>
-                    <p>
-                        Permanent gaps in Canada's climate record undermine decades of research. Future
-                        climate projections, agricultural planning, and infrastructure investments now
-                        lack critical baseline data.
-                    </p>
-                </div>
-
-                <div class="implication-card indigenous">
-                    <h3>🏔️ Indigenous Communities</h3>
-                    <p>
-                        Northern and remote stations serving Indigenous communities show complete failure.
-                        This violates Canada's UNDRIP commitments to support Indigenous climate adaptation
-                        and contradicts reconciliation principles.
-                    </p>
-                </div>
-            </div>
-
-            <div style="margin-top: 40px; padding: 30px; background: #fadbd8; border-left: 5px solid #e74c3c; border-radius: 10px;">
-                <h3 style="color: #c0392b; margin-bottom: 15px;">📊 Scale of Data Loss</h3>
-                <div style="line-height: 2; color: #555;">
-                    <p><strong>Only 30.1% of stations transmit ANY data</strong></p>
-                    <p>Of the 30.1% "active" stations, average data completeness is just 45.0%</p>
-                    <p>This represents a <strong>86% effective collapse</strong> of Canada's climate monitoring capability</p>
-                    <p style="margin-top: 15px; font-weight: bold; color: #c0392b;">
-                        Canada has lost the ability to meet its international climate reporting obligations.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="map-section">
-            <h2 class="map-title">📍 Geographic Distribution of Network Failure</h2>
-            <div style="text-align: center; margin-bottom: 30px;">
-                <p style="color: #2c3e50; font-size: 1.2em; margin-bottom: 10px;">
-                    <strong>Map shows:</strong>
-                </p>
-                <div style="display: inline-block; text-align: left; background: #ecf0f1; padding: 20px; border-radius: 10px;">
-                    <p style="color: #27ae60; margin: 5px 0;">
-                        <span style="display: inline-block; width: 20px; height: 20px; background: #27ae60; border-radius: 50%; margin-right: 10px; vertical-align: middle;"></span>
-                        <strong>21 major stations</strong> (strategic airports &amp; cities)
-                    </p>
-                    <p style="color: #e74c3c; margin: 5px 0;">
-                        <span style="display: inline-block; width: 20px; height: 20px; background: #e74c3c; border-radius: 50%; margin-right: 10px; vertical-align: middle;"></span>
-                        <strong>100 failed stations</strong> (sample from 1,812 total failures)
-                    </p>
-                </div>
-                <p style="color: #7f8c8d; margin-top: 15px; font-size: 0.95em;">
-                    Note: Additional 1,712 failed stations not shown due to map performance limits
-                </p>
-            </div>
-            <div id="map"></div>
+        <div class="methodology">
+            <h2>📋 Methodology</h2>
+            <p>
+                Each audit systematically tests all registered weather stations via Environment Canada's 
+                Historical Climate Data API (<code>climate.weather.gc.ca</code>) and cross-references against 
+                the official station inventory from <code>ftp.tor.ec.gc.ca</code>.
+            </p>
+            <p>
+                Stations are classified as <strong>ACTIVE</strong> if they return precipitation data within 
+                the test period, <strong>INACTIVE/NO_DATA</strong> if API requests return empty results.
+            </p>
+            <p>
+                Full source code and methodology: 
+                <a href="https://github.com/ahdelvalle/canada-weather-network-audit" target="_blank">GitHub Repository</a>
+            </p>
         </div>
 
         <div class="footer">
-            <h3>📄 Evidence Package</h3>
-            <p style="margin: 20px 0; line-height: 2;">
-                <strong>Methodology:</strong> Systematic testing of all 2,594 stations via Environment Canada's Historical Climate Data portal<br>
-                <strong>Testing Period:</strong> 2000-2025 with comprehensive verification<br>
-                <strong>Data Quality Analysis:</strong> NaN detection and completeness scoring<br>
-                <strong>Audit Date:</strong> December 12, 2025
-            </p>
-
-            <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.3);">
-                <p><strong>Adrian Hernandez-del-Valle, PhD</strong></p>
-                <p>Independent Researcher</p>
-                <p style="margin-top: 10px;">
-                    <a href="mailto:ahdv@hotmail.com" style="color: #3498db;">
-                        ahdv@hotmail.com
-                    </a> | 514-208-5677
-                </p>
-            </div>
-
-            <p style="margin-top: 20px; font-size: 0.9em; opacity: 0.7;">
-                Prepared for MP Rachel Bendayan's Office | Comprehensive Network Crisis Documentation
+            <p><strong>Dr. Adrian Hernandez-del-Valle</strong></p>
+            <p>Economist & Data Scientist • Montreal, Quebec</p>
+            <p><a href="mailto:ahdv79@gmail.com">ahdv79@gmail.com</a></p>
+            <p style="margin-top: 15px; font-size: 0.9em;">
+                This research is being conducted in coordination with the office of<br>
+                MP Rachel Bendayan (Outremont)
             </p>
         </div>
     </div>
-
-    <script>
-        // Wait for page to fully load before initializing map
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize map centered on Ontario/Quebec
-            var map = L.map('map').setView([48.0, -78.0], 5);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors',
-            maxZoom: 18
-        }).addTo(map);
-
-        // Major stations data
-        var majorStations = [
-            { lat: 43.78, lon: -79.47, name: 'TORONTO NORTH YORK', id: '26953', status: 'ACTIVE', province: 'ONTARIO' },
-            { lat: 45.38, lon: -75.72, name: 'OTTAWA CDA', id: '4333', status: 'ACTIVE', province: 'ONTARIO' },
-            { lat: 45.47, lon: -73.74, name: 'MONTREAL/PIERRE ELLIOTT TRUDEAU INTL', id: '30165', status: 'ACTIVE', province: 'QUEBEC' },
-            { lat: 43.03, lon: -81.15, name: 'LONDON CS', id: '10999', status: 'ACTIVE', province: 'ONTARIO' },
-            { lat: 46.8, lon: -71.38, name: 'QUEBEC/JEAN LESAGE INTL', id: '26892', status: 'ACTIVE', province: 'QUEBEC' },
-            { lat: 48.37, lon: -89.33, name: 'THUNDER BAY CS', id: '30682', status: 'ACTIVE', province: 'ONTARIO' },
-            { lat: 46.63, lon: -80.8, name: 'SUDBURY CLIMATE', id: '49508', status: 'ACTIVE', province: 'ONTARIO' },
-            { lat: 42.28, lon: -82.96, name: 'WINDSOR A', id: '54738', status: 'ACTIVE', province: 'ONTARIO' },
-            { lat: 46.49, lon: -84.51, name: 'SAULT STE MARIE A', id: '50092', status: 'ACTIVE', province: 'ONTARIO' },
-            { lat: 44.22, lon: -76.6, name: 'KINGSTON CLIMATE', id: '47267', status: 'ACTIVE', province: 'ONTARIO' },
-            { lat: 43.29, lon: -79.91, name: 'HAMILTON RBG CS', id: '27529', status: 'ACTIVE', province: 'ONTARIO' },
-            { lat: 48.56, lon: -81.39, name: 'TIMMINS CLIMATE', id: '47547', status: 'ACTIVE', province: 'ONTARIO' },
-            { lat: 51.29, lon: -80.61, name: 'MOOSONEE', id: '48950', status: 'ACTIVE', province: 'ONTARIO' },
-            { lat: 45.44, lon: -71.69, name: 'SHERBROOKE', id: '48371', status: 'ACTIVE', province: 'QUEBEC' },
-            { lat: 46.35, lon: -72.52, name: 'TROIS-RIVIERES', id: '10764', status: 'ACTIVE', province: 'QUEBEC' },
-            { lat: 48.06, lon: -77.79, name: "VAL-D'OR A", id: '6081', status: 'ACTIVE', province: 'QUEBEC' },
-            { lat: 50.22, lon: -66.25, name: 'SEPT-ILES', id: '42683', status: 'ACTIVE', province: 'QUEBEC' },
-            { lat: 48.33, lon: -71.0, name: 'BAGOTVILLE A', id: '5889', status: 'ACTIVE', province: 'QUEBEC' },
-            { lat: 58.09, lon: -68.42, name: 'KUUJJUAQ A', id: '52179', status: 'ACTIVE', province: 'QUEBEC' },
-            { lat: 48.21, lon: -78.84, name: 'ROUYN-NORANDA A', id: '50090', status: 'INACTIVE', province: 'QUEBEC' }
-        ];
-
-        // Failed stations sample (100 from 1,812 total)
-        var failedStations = [
-            { lat: 46.82, lon: -70.75, name: 'ST RAPHAEL', id: '5869', province: 'QUEBEC' },
-            { lat: 43.22, lon: -79.63, name: 'WINONA', id: '4720', province: 'ONTARIO' },
-            { lat: 48.78, lon: -71.85, name: 'CHUTE A LA SAVANE', id: '5899', province: 'QUEBEC' },
-            { lat: 43.83, lon: -79.35, name: 'MARKHAM WATERWORKS', id: '4968', province: 'ONTARIO' },
-            { lat: 43.87, lon: -79.48, name: 'MAPLE', id: '4962', province: 'ONTARIO' },
-            { lat: 44.77, lon: -79.7, name: 'WAUBAUSHENE', id: '4535', province: 'ONTARIO' },
-            { lat: 48.6, lon: -85.28, name: 'WHITE RIVER', id: '4104', province: 'ONTARIO' },
-            { lat: 45.38, lon: -75.75, name: 'OTTAWA ALTA VISTA', id: '4329', province: 'ONTARIO' },
-            { lat: 44.72, lon: -81.28, name: 'OLIPHANT', id: '10087', province: 'ONTARIO' },
-            { lat: 43.45, lon: -80.48, name: 'KITCHENER CITY ENG 2', id: '4783', province: 'ONTARIO' },
-            { lat: 45.8, lon: -79.42, name: 'UPLANDS', id: '4526', province: 'ONTARIO' },
-            { lat: 45.82, lon: -76.75, name: 'FORT COULONGE', id: '5589', province: 'QUEBEC' },
-            { lat: 45.38, lon: -71.47, name: 'ISLAND BROOK', id: '5378', province: 'QUEBEC' },
-            { lat: 48.5, lon: -81.33, name: 'TIMMINS', id: '4179', province: 'ONTARIO' },
-            { lat: 42.9, lon: -81.7, name: 'METCALFE', id: '4795', province: 'ONTARIO' },
-            { lat: 48.58, lon: -78.17, name: 'LA FERME', id: '6046', province: 'QUEBEC' },
-            { lat: 50.25, lon: -63.58, name: 'HAVRE ST PIERRE', id: '5691', province: 'QUEBEC' },
-            { lat: 45.47, lon: -73.63, name: 'MONTREAL LOYOLA', id: '5419', province: 'QUEBEC' },
-            { lat: 45.32, lon: -79.25, name: 'HUNTSVILLE', id: '4459', province: 'ONTARIO' },
-            { lat: 45.22, lon: -72.5, name: 'KNOWLTON', id: '5382', province: 'QUEBEC' },
-            { lat: 45.35, lon: -79.32, name: 'HUNTSVILLE TAWINGO', id: '4461', province: 'ONTARIO' },
-            { lat: 45.23, lon: -75.68, name: 'MANOTICK', id: '4313', province: 'ONTARIO' },
-            { lat: 46.05, lon: -71.97, name: 'VICTORIAVILLE', id: '5565', province: 'QUEBEC' },
-            { lat: 48.88, lon: -87.53, name: 'PAYS PLAT FORESTRY', id: '4037', province: 'ONTARIO' },
-            { lat: 48.43, lon: -89.22, name: 'PORT ARTHUR', id: '4039', province: 'ONTARIO' },
-            { lat: 50.7, lon: -59.32, name: 'TETE A LA BALEINE', id: '5746', province: 'QUEBEC' },
-            { lat: 45.3, lon: -75.52, name: 'GLOUCESTER RCN', id: '4282', province: 'ONTARIO' },
-            { lat: 45.6, lon: -79.57, name: 'BURKS FALLS', id: '4425', province: 'ONTARIO' },
-            { lat: 45.42, lon: -71.48, name: 'STATTON BROOK NORTH', id: '5304', province: 'QUEBEC' },
-            { lat: 43.98, lon: -77.25, name: 'BLOOMFIELD WEST', id: '4863', province: 'ONTARIO' },
-            { lat: 44.97, lon: -76.62, name: 'DALHOUSIE L HIGH FALLS', id: '4263', province: 'ONTARIO' },
-            { lat: 49.17, lon: -69.23, name: 'LABRIEVILLE B2', id: '5695', province: 'QUEBEC' },
-            { lat: 48.5, lon: -68.48, name: 'POINTE AU PERE', id: '5831', province: 'QUEBEC' },
-            { lat: 49.22, lon: -68.15, name: 'BAIE COMEAU CBA', id: '5663', province: 'QUEBEC' },
-            { lat: 46.07, lon: -73.37, name: 'STE ELIZABETH', id: '5270', province: 'QUEBEC' },
-            { lat: 44.28, lon: -79.85, name: 'ANGUS CAMPHILL', id: '27001', province: 'ONTARIO' },
-            { lat: 45.93, lon: -71.63, name: 'HAM NORD', id: '5370', province: 'QUEBEC' },
-            { lat: 46.13, lon: -79.53, name: 'NIPISSING', id: '4478', province: 'ONTARIO' },
-            { lat: 46.3, lon: -72.06, name: 'VILLEROY (STE-FRANCOISE)', id: '10812', province: 'QUEBEC' },
-            { lat: 47.22, lon: -61.97, name: 'AMHERST ISLAND CDA EPF', id: '5760', province: 'QUEBEC' },
-            { lat: 47.35, lon: -70.03, name: 'LA POCATIERE CDA', id: '5806', province: 'QUEBEC' },
-            { lat: 43.25, lon: -81.85, name: 'PINERY', id: '4585', province: 'ONTARIO' },
-            { lat: 49.15, lon: -71.18, name: 'RIVIERE JOLY', id: '5933', province: 'QUEBEC' },
-            { lat: 46.77, lon: -71.22, name: 'ST ROMUALD', id: '5512', province: 'QUEBEC' },
-            { lat: 48.22, lon: -78.87, name: 'RIVIERE KINOJEVIS', id: '5998', province: 'QUEBEC' },
-            { lat: 48.75, lon: -80.58, name: 'TWIN FALLS', id: '4182', province: 'ONTARIO' },
-            { lat: 44.2, lon: -79.57, name: 'GILFORD', id: '4449', province: 'ONTARIO' },
-            { lat: 42.55, lon: -80.05, name: 'LONG POINT', id: '4651', province: 'ONTARIO' },
-            { lat: 45.52, lon: -73.67, name: 'ST LAURENT (COLLEGE)', id: '5499', province: 'QUEBEC' },
-            { lat: 44.55, lon: -79.67, name: 'HORSESHOE VALLEY', id: '4458', province: 'ONTARIO' },
-            { lat: 44.22, lon: -79.43, name: 'KESWICK', id: '4464', province: 'ONTARIO' },
-            { lat: 44.55, lon: -80.45, name: 'THORNBURY MATTS MOTEL', id: '4518', province: 'ONTARIO' },
-            { lat: 47.73, lon: -69.98, name: 'ST FIDELE 2', id: '5734', province: 'QUEBEC' },
-            { lat: 44.3, lon: -77.8, name: 'CAMPBELLFORD', id: '4892', province: 'ONTARIO' },
-            { lat: 45.65, lon: -70.73, name: 'AUDET', id: '5312', province: 'QUEBEC' },
-            { lat: 49.3, lon: -88.8, name: 'BLACK STURGEON LAKE 2', id: '3991', province: 'ONTARIO' },
-            { lat: 49.3, lon: -73.85, name: 'AIGREMONT', id: '5886', province: 'QUEBEC' },
-            { lat: 43.8, lon: -81.38, name: 'BELGRAVE', id: '4543', province: 'ONTARIO' },
-            { lat: 43.3, lon: -79.8, name: 'BURLINGTON PIERS (AUT)', id: '7868', province: 'ONTARIO' },
-            { lat: 42.67, lon: -82.02, name: 'BLENHEIM', id: '4544', province: 'ONTARIO' },
-            { lat: 48.78, lon: -94.05, name: 'STRATTON', id: '3948', province: 'ONTARIO' },
-            { lat: 45.57, lon: -77.42, name: 'KILLALOE', id: '4293', province: 'ONTARIO' },
-            { lat: 45.45, lon: -75.63, name: 'OTTAWA ROCKCLIFFE A', id: '4344', province: 'ONTARIO' },
-            { lat: 44.18, lon: -77.07, name: 'DESERONTO', id: '4914', province: 'ONTARIO' },
-            { lat: 44.12, lon: -77.5, name: 'TRENTON DOMTAR', id: '5127', province: 'ONTARIO' },
-            { lat: 49.42, lon: -76.45, name: 'MIQUELON', id: '6055', province: 'QUEBEC' },
-            { lat: 50.08, lon: -67.95, name: 'TOULNUSTOUC', id: '5655', province: 'QUEBEC' },
-            { lat: 46.43, lon: -80.32, name: 'WARREN', id: '4136', province: 'ONTARIO' },
-            { lat: 48.45, lon: -89.17, name: 'THUNDER BAY PROVINCIAL PAPER', id: '3978', province: 'ONTARIO' },
-            { lat: 45.43, lon: -75.35, name: 'SARSFIELD', id: '4380', province: 'ONTARIO' },
-            { lat: 48.92, lon: -80.12, name: 'LOWBUSH', id: '4160', province: 'ONTARIO' },
-            { lat: 44.25, lon: -78.43, name: 'IDA', id: '4948', province: 'ONTARIO' },
-            { lat: 47.33, lon: -85.83, name: 'CARIBOU ISLAND', id: '3996', province: 'ONTARIO' },
-            { lat: 47.77, lon: -78.3, name: 'RAPIDE-SEPT', id: '5994', province: 'QUEBEC' },
-            { lat: 48.73, lon: -80.8, name: 'PORQUIS JUNCTION A', id: '4175', province: 'ONTARIO' },
-            { lat: 45.3, lon: -72.63, name: 'BROMONT', id: '5326', province: 'QUEBEC' },
-            { lat: 45.03, lon: -79.0, name: 'VANKOUGHNET', id: '4527', province: 'ONTARIO' },
-            { lat: 43.85, lon: -79.05, name: 'PICKERING', id: '5001', province: 'ONTARIO' },
-            { lat: 45.97, lon: -71.6, name: 'ST FORTUNAT', id: '5466', province: 'QUEBEC' },
-            { lat: 48.95, lon: -65.52, name: 'MURDOCHVILLE', id: '5818', province: 'QUEBEC' },
-            { lat: 46.22, lon: -79.13, name: 'BONFIELD', id: '4186', province: 'ONTARIO' },
-            { lat: 45.15, lon: -74.47, name: 'LANCASTER', id: '4303', province: 'ONTARIO' },
-            { lat: 50.65, lon: -68.73, name: 'MANIC 5', id: '5704', province: 'QUEBEC' },
-            { lat: 43.18, lon: -79.4, name: 'VINELAND STATION', id: '4703', province: 'ONTARIO' },
-            { lat: 43.0, lon: -82.42, name: 'SARNIA WATERWORKS', id: '4591', province: 'ONTARIO' },
-            { lat: 45.03, lon: -74.72, name: 'CORNWALL ST LHS', id: '4259', province: 'ONTARIO' },
-            { lat: 48.55, lon: -93.52, name: 'FORT FRANCES CDA EPF', id: '3940', province: 'ONTARIO' },
-            { lat: 43.83, lon: -79.08, name: 'PICKERING FIRE HALL #5', id: '5004', province: 'ONTARIO' },
-            { lat: 61.05, lon: -69.62, name: 'QUAQTAQ A', id: '54060', province: 'QUEBEC' },
-            { lat: 45.27, lon: -72.67, name: 'LAC BROMONT', id: '5383', province: 'QUEBEC' },
-            { lat: 46.38, lon: -70.7, name: 'CRANBOURNE', id: '5344', province: 'QUEBEC' },
-            { lat: 62.42, lon: -77.93, name: 'IVUJIVIK A', id: '54066', province: 'QUEBEC' },
-            { lat: 45.4, lon: -71.58, name: 'PETIT LAC', id: '5430', province: 'QUEBEC' },
-            { lat: 43.72, lon: -79.22, name: 'SCARBOROUGH JUNCTION', id: '5028', province: 'ONTARIO' },
-            { lat: 47.77, lon: -73.9, name: 'BGE C LAC CHATEAUVERT', id: '5948', province: 'QUEBEC' },
-            { lat: 43.32, lon: -79.87, name: 'ALDERSHOT', id: '4852', province: 'ONTARIO' },
-            { lat: 43.72, lon: -79.32, name: 'TORONTO BERMONDSEY', id: '5056', province: 'ONTARIO' },
-            { lat: 48.77, lon: -72.72, name: 'LA DORE', id: '5881', province: 'QUEBEC' }
-        ];
-
-        // Add failed stations to map (smaller red markers)
-        failedStations.forEach(function(station) {
-            var marker = L.circleMarker([station.lat, station.lon], {
-                radius: 8,
-                fillColor: '#ff0000',
-                color: '#8B0000',
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.7
-            }).addTo(map);
-
-            var popupContent = '<div style="min-width: 200px;">' +
-                '<h3 style="margin-bottom: 10px; color: #e74c3c;">' + station.name + '</h3>' +
-                '<p><strong>ID:</strong> ' + station.id + '</p>' +
-                '<p><strong>Province:</strong> ' + station.province + '</p>' +
-                '<p style="color: #e74c3c; font-weight: bold;">STATUS: INACTIVE</p>' +
-                '<p style="margin-top: 10px; font-size: 0.9em; color: #7f8c8d;">Part of 1,812 failed stations in full network audit</p>' +
-                '</div>';
-
-            marker.bindPopup(popupContent);
-
-            marker.on('mouseover', function(e) {
-                this.setRadius(12);
-                this.setStyle({ weight: 3 });
-                this.openPopup();
-            });
-
-            marker.on('mouseout', function() {
-                this.setRadius(8);
-                this.setStyle({ weight: 2 });
-            });
-        });
-
-        // Add major stations (larger markers on top)
-        majorStations.forEach(function(station) {
-            var color = station.status === 'ACTIVE' ? '#00ff00' : '#ff0000';
-
-            var marker = L.circleMarker([station.lat, station.lon], {
-                radius: 15,
-                fillColor: color,
-                color: '#000',
-                weight: 3,
-                opacity: 1,
-                fillOpacity: 0.9
-            }).addTo(map);
-
-            var statusColor = station.status === 'ACTIVE' ? '#27ae60' : '#e74c3c';
-            var popupContent = '<div style="min-width: 220px;">' +
-                '<h3 style="margin-bottom: 10px; color: ' + statusColor + ';">' + station.name + '</h3>' +
-                '<p><strong>ID:</strong> ' + station.id + '</p>' +
-                '<p><strong>Province:</strong> ' + station.province + '</p>' +
-                '<p><strong>Status:</strong> <span style="color: ' + statusColor + '; font-weight: bold;">' + station.status + '</span></p>' +
-                '<p style="margin-top: 10px; font-size: 0.9em; color: #7f8c8d;">Part of 21-station strategic audit</p>' +
-                '</div>';
-
-            marker.bindPopup(popupContent);
-
-            marker.on('mouseover', function(e) {
-                this.setRadius(20);
-                this.setStyle({ weight: 4 });
-                this.openPopup();
-            });
-
-            marker.on('mouseout', function() {
-                this.setRadius(15);
-                this.setStyle({ weight: 3 });
-            });
-        });
-
-        console.log('December 2025 Crisis Dashboard loaded - 69.9% network failure confirmed');
-        });
-    </script>
 </body>
 </html>
