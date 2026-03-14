@@ -31,10 +31,24 @@
             padding: 30px;
             border: 1px solid rgba(255,255,255,0.15);
             position: relative;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease,
+                        box-shadow 0.2s ease;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+        .report-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(231,76,60,0.5);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
         }
         .report-card.latest {
             border-color: rgba(231,76,60,0.6);
             background: rgba(231,76,60,0.12);
+        }
+        .report-card.latest:hover {
+            border-color: rgba(231,76,60,0.9);
         }
         .report-card .badge {
             position: absolute;
@@ -48,6 +62,20 @@
             font-weight: bold;
         }
         .report-card .badge.v1 { background: #7f8c8d; }
+        .view-dashboard {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 18px;
+            background: rgba(231,76,60,0.25);
+            border: 1px solid rgba(231,76,60,0.5);
+            border-radius: 20px;
+            font-size: 0.85em;
+            color: #ff8a80;
+            transition: background 0.2s;
+        }
+        .report-card:hover .view-dashboard {
+            background: rgba(231,76,60,0.45);
+        }
         .report-card h2 { font-size: 1.6em; margin-bottom: 20px; }
         .report-card h2 span { font-size: 0.7em; margin-right: 8px; }
         .stats-row {
@@ -113,7 +141,7 @@
             <!-- ============================================================ -->
             <!-- MARCH 2026 — LATEST                                          -->
             <!-- ============================================================ -->
-            <div class="report-card latest">
+            <a class="report-card latest" href="march-2026/v2_network_dashboard.html">
                 <span class="badge">LATEST</span>
                 <h2><span>🍁</span>March 2026</h2>
 
@@ -157,12 +185,12 @@
                         <strong>Key finding:</strong> Quebec 34.1% failure — worst of three provinces. Zero improvement in Ontario (47) and Quebec (98) since February 2026. Alberta added for the first time: 33 problematic stations in the agricultural belt (Peace River, Red Deer corridor, Lethbridge). All 178 classified as ACTIVE_TRANSMISSION_ISSUE — stations ECCC considers operational yet failing to deliver reliable precipitation records.
                     </p>
                 </div>
-            </div>
-
+                <span class="view-dashboard">📍 View Interactive Map →</span>
+            </a>
             <!-- ============================================================ -->
             <!-- FEBRUARY 2026                                                 -->
             <!-- ============================================================ -->
-            <div class="report-card">
+            <a class="report-card" href="february-2026/v2_network_dashboard.html">
                 <h2><span>🍁</span>February 2026</h2>
 
                 <div class="stats-row">
@@ -187,12 +215,13 @@
                         <strong>Finding:</strong> Quebec 34.1% failure vs Ontario 22.3% — 145 stations referred to NIRT
                     </p>
                 </div>
-            </div>
+                <span class="view-dashboard">📍 View Interactive Map →</span>
+            </a>
 
             <!-- ============================================================ -->
             <!-- JANUARY 2026 — V1                                             -->
             <!-- ============================================================ -->
-            <div class="report-card">
+            <a class="report-card" href="january-2026/weather_station_dashboard_visible.html">
                 <span class="badge v1">V1</span>
                 <h2><span>🍁</span>January 2026</h2>
 
@@ -217,12 +246,13 @@
                         <strong>Finding:</strong> Network collapse accelerating — Ontario at 88.9%, Alberta at 82.0%, Quebec at 75.8%
                     </p>
                 </div>
-            </div>
+                <span class="view-dashboard">📍 View Interactive Map →</span>
+            </a>
 
             <!-- ============================================================ -->
             <!-- DECEMBER 2025                                                  -->
             <!-- ============================================================ -->
-            <div class="report-card">
+            <a class="report-card" href="december-2025/weather_station_dashboard_visible.html">
                 <h2><span>🍁</span>December 2025</h2>
 
                 <div class="stats-row">
@@ -246,7 +276,8 @@
                         <strong>Finding:</strong> Initial audit establishing baseline — system-wide collapse documented
                     </p>
                 </div>
-            </div>
+                <span class="view-dashboard">📍 View Interactive Map →</span>
+            </a>
 
         </div><!-- end reports-grid -->
 
