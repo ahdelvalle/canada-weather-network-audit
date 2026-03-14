@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canada Weather Network Audit — Dr. Adrian Hernandez-del-Valle</title>
+    <title>Canada Weather Network Audit - Dr. Adrian Hernandez-del-Valle</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             color: #fff;
@@ -29,166 +29,240 @@
             background: rgba(255,255,255,0.1);
             border-radius: 15px;
             padding: 30px;
-            text-decoration: none;
-            color: white;
-            transition: transform 0.3s, background 0.3s;
-            display: block;
-        }
-        .report-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.15);
+            position: relative;
         }
         .report-card.latest {
-            border: 2px solid #e74c3c;
-            background: rgba(231, 76, 60, 0.2);
+            border-color: rgba(231,76,60,0.6);
+            background: rgba(231,76,60,0.12);
         }
-        .report-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .report-date { font-size: 1.4em; font-weight: bold; }
-        .report-badge {
+        .report-card .badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             background: #e74c3c;
-            padding: 5px 12px;
+            color: white;
+            padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.8em;
             font-weight: bold;
         }
-        .report-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin: 20px 0; }
-        .stat { text-align: center; }
-        .stat-value { font-size: 1.8em; font-weight: bold; color: #e74c3c; }
-        .stat-label { font-size: 0.85em; opacity: 0.7; }
-        .report-scope { opacity: 0.8; font-size: 0.95em; }
-        .methodology {
-            margin-top: 50px;
-            padding: 30px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
+        .report-card .badge.v1 { background: #7f8c8d; }
+        .report-card h2 { font-size: 1.6em; margin-bottom: 20px; }
+        .report-card h2 span { font-size: 0.7em; margin-right: 8px; }
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
         }
-        .methodology h2 { margin-bottom: 20px; }
-        .methodology p { margin-bottom: 15px; line-height: 1.7; opacity: 0.9; }
-        .methodology a { color: #3498db; }
+        .stat { text-align: center; }
+        .stat .number { font-size: 2.2em; font-weight: bold; color: #e74c3c; }
+        .stat .number.green { color: #2ecc71; }
+        .stat .label { font-size: 0.85em; opacity: 0.7; margin-top: 4px; }
+        .province-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .province-chip {
+            background: rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.82em;
+            text-align: center;
+        }
+        .province-chip .pname { font-weight: bold; margin-bottom: 4px; opacity: 0.85; }
+        .province-chip .prate { font-size: 1.3em; font-weight: bold; color: #e74c3c; }
+        .province-chip .prate.amber { color: #f39c12; }
+        .province-chip .psub { font-size: 0.78em; opacity: 0.6; }
+        .report-meta p { font-size: 0.9em; opacity: 0.75; line-height: 1.8; }
+        .report-meta strong { opacity: 1; color: #fff; }
+        .links { margin-top: 40px; text-align: center; }
+        .links a {
+            color: #63b3ed;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 0.95em;
+        }
+        .links a:hover { text-decoration: underline; }
         .footer {
             margin-top: 50px;
             text-align: center;
-            padding: 30px;
-            opacity: 0.8;
+            opacity: 0.5;
+            font-size: 0.85em;
+            line-height: 2;
         }
-        .footer a { color: #3498db; }
     </style>
 </head>
 <body>
     <div class="container">
+
         <div class="header">
             <h1>🇨🇦 Canada Weather Network Audit</h1>
             <p>Independent monitoring of Environment Canada's weather station infrastructure</p>
         </div>
 
         <div class="alert-banner">
-            ⚠️ UPDATE: Using ECCC's own methodology, 29.1% of active stations still failing — 145 stations referred for investigation
+            ⚠️ UPDATE (March 2026): Using ECCC's own methodology, 22.7% of active stations still failing across Ontario, Quebec &amp; Alberta — 178 stations referred for investigation. Zero improvement in Ontario and Quebec since February 2026.
         </div>
 
-                <div class="reports-grid">
+        <div class="reports-grid">
 
-            <a href="february-2026/v2_network_dashboard.html" class="report-card latest">
-                <div class="report-header">
-                    <span class="report-date">📊 February 2026</span>
-                    <span class="report-badge">LATEST</span>
-                </div>
-                <div class="report-stats">
-                    <div class="stat">
-                        <div class="stat-value">29.1%</div>
-                        <div class="stat-label">Effective Failure Rate</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">2,594</div>
-                        <div class="stat-label">Stations Audited</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">145</div>
-                        <div class="stat-label">Problematic</div>
-                    </div>
-                </div>
-                <div class="report-scope">
-                    <strong>Scope:</strong> Ontario • Quebec (Full ECCC Inventory)<br>
-                    <strong>Methodology:</strong> ECCC 5-category classification per Minister Dabrusin's response<br>
-                    <strong>Finding:</strong> Quebec 34.1% failure vs Ontario 22.3% — 145 stations referred to NIRT
-                </div>
-            </a>
-        
-            <a href="january-2026/" class="report-card">
-                <div class="report-header">
-                    <span class="report-date">📊 January 2026</span>
-                    <span class="report-badge">V1</span>
-                </div>
-                <div class="report-stats">
-                    <div class="stat">
-                        <div class="stat-value">83.1%</div>
-                        <div class="stat-label">Failure Rate</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">4,214</div>
-                        <div class="stat-label">Stations Tested</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-value">3,500</div>
-                        <div class="stat-label">Offline</div>
-                    </div>
-                </div>
-                <div class="report-scope">
-                    <strong>Scope:</strong> Alberta • Ontario • Quebec<br>
-                    <strong>Finding:</strong> Network collapse accelerating — Ontario at 88.9%, Alberta at 82.0%, Quebec at 75.8%
-                </div>
-            </a>
+            <!-- ============================================================ -->
+            <!-- MARCH 2026 — LATEST                                          -->
+            <!-- ============================================================ -->
+            <div class="report-card latest">
+                <span class="badge">LATEST</span>
+                <h2><span>🍁</span>March 2026</h2>
 
-            <a href="december-2025/" class="report-card">
-                <div class="report-header">
-                    <span class="report-date">📊 December 2025</span>
-                </div>
-                <div class="report-stats">
+                <div class="stats-row">
                     <div class="stat">
-                        <div class="stat-value">69.9%</div>
-                        <div class="stat-label">Failure Rate</div>
+                        <div class="number">22.7%</div>
+                        <div class="label">Effective Failure Rate</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-value">2,594</div>
-                        <div class="stat-label">Stations Tested</div>
+                        <div class="number">4,058</div>
+                        <div class="label">Stations Audited</div>
                     </div>
                     <div class="stat">
-                        <div class="stat-value">1,812</div>
-                        <div class="stat-label">Offline</div>
+                        <div class="number">178</div>
+                        <div class="label">Problematic</div>
                     </div>
                 </div>
-                <div class="report-scope">
-                    <strong>Scope:</strong> Ontario • Quebec<br>
-                    <strong>Finding:</strong> Initial audit establishing baseline — system-wide collapse documented
-                </div>
-            </a>
-        </div>
 
-        <div class="methodology">
-            <h2>📋 Methodology</h2>
-            <p>
-                Each audit systematically tests all registered weather stations via Environment Canada's 
-                Historical Climate Data API (<code>climate.weather.gc.ca</code>) and cross-references against 
-                the official station inventory from <code>ftp.tor.ec.gc.ca</code>.
-            </p>
-            <p>
-                Stations are classified as <strong>ACTIVE</strong> if they return precipitation data within 
-                the test period, <strong>INACTIVE/NO_DATA</strong> if API requests return empty results.
-            </p>
-            <p>
-                Full source code and methodology: 
-                <a href="https://github.com/ahdelvalle/canada-weather-network-audit" target="_blank">GitHub Repository</a>
-            </p>
+                <div class="province-row">
+                    <div class="province-chip">
+                        <div class="pname">⚜️ Quebec</div>
+                        <div class="prate">34.1%</div>
+                        <div class="psub">98 problematic / 287 active</div>
+                    </div>
+                    <div class="province-chip">
+                        <div class="pname">🍁 Ontario</div>
+                        <div class="prate amber">22.3%</div>
+                        <div class="psub">47 problematic / 211 active</div>
+                    </div>
+                    <div class="province-chip">
+                        <div class="pname">🌾 Alberta</div>
+                        <div class="prate amber">11.5%</div>
+                        <div class="psub">33 problematic / 287 active</div>
+                    </div>
+                </div>
+
+                <div class="report-meta">
+                    <p>
+                        <strong>Scope:</strong> Ontario • Quebec • Alberta (Full ECCC Inventory — 4,058 stations)<br>
+                        <strong>Methodology:</strong> ECCC 5-category classification per Minister Dabrusin's response<br>
+                        <strong>Key finding:</strong> Quebec 34.1% failure — worst of three provinces. Zero improvement in Ontario (47) and Quebec (98) since February 2026. Alberta added for the first time: 33 problematic stations in the agricultural belt (Peace River, Red Deer corridor, Lethbridge). All 178 classified as ACTIVE_TRANSMISSION_ISSUE — stations ECCC considers operational yet failing to deliver reliable precipitation records.
+                    </p>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- FEBRUARY 2026                                                 -->
+            <!-- ============================================================ -->
+            <div class="report-card">
+                <h2><span>🍁</span>February 2026</h2>
+
+                <div class="stats-row">
+                    <div class="stat">
+                        <div class="number">29.1%</div>
+                        <div class="label">Effective Failure Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="number">2,594</div>
+                        <div class="label">Stations Audited</div>
+                    </div>
+                    <div class="stat">
+                        <div class="number">145</div>
+                        <div class="label">Problematic</div>
+                    </div>
+                </div>
+
+                <div class="report-meta">
+                    <p>
+                        <strong>Scope:</strong> Ontario • Quebec (Full ECCC Inventory)<br>
+                        <strong>Methodology:</strong> ECCC 5-category classification per Minister Dabrusin's response<br>
+                        <strong>Finding:</strong> Quebec 34.1% failure vs Ontario 22.3% — 145 stations referred to NIRT
+                    </p>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- JANUARY 2026 — V1                                             -->
+            <!-- ============================================================ -->
+            <div class="report-card">
+                <span class="badge v1">V1</span>
+                <h2><span>🍁</span>January 2026</h2>
+
+                <div class="stats-row">
+                    <div class="stat">
+                        <div class="number">83.1%</div>
+                        <div class="label">Failure Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="number">4,214</div>
+                        <div class="label">Stations Tested</div>
+                    </div>
+                    <div class="stat">
+                        <div class="number">3,500</div>
+                        <div class="label">Offline</div>
+                    </div>
+                </div>
+
+                <div class="report-meta">
+                    <p>
+                        <strong>Scope:</strong> Alberta • Ontario • Quebec<br>
+                        <strong>Finding:</strong> Network collapse accelerating — Ontario at 88.9%, Alberta at 82.0%, Quebec at 75.8%
+                    </p>
+                </div>
+            </div>
+
+            <!-- ============================================================ -->
+            <!-- DECEMBER 2025                                                  -->
+            <!-- ============================================================ -->
+            <div class="report-card">
+                <h2><span>🍁</span>December 2025</h2>
+
+                <div class="stats-row">
+                    <div class="stat">
+                        <div class="number">69.9%</div>
+                        <div class="label">Failure Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="number">2,594</div>
+                        <div class="label">Stations Tested</div>
+                    </div>
+                    <div class="stat">
+                        <div class="number">1,812</div>
+                        <div class="label">Offline</div>
+                    </div>
+                </div>
+
+                <div class="report-meta">
+                    <p>
+                        <strong>Scope:</strong> Ontario • Quebec<br>
+                        <strong>Finding:</strong> Initial audit establishing baseline — system-wide collapse documented
+                    </p>
+                </div>
+            </div>
+
+        </div><!-- end reports-grid -->
+
+        <div class="links">
+            <a href="https://github.com/ahdelvalle/canada-weather-network-audit">📁 GitHub Repository</a>
+            <a href="https://github.com/ahdelvalle/canada-weather-network-audit/blob/main/MP_Evidence_Report.md">📄 MP Evidence Report</a>
+            <a href="mailto:ahdv@hotmail.com">✉️ Contact</a>
         </div>
 
         <div class="footer">
-            <p><strong>Dr. Adrian Hernandez-del-Valle</strong></p>
-            <p>Economist & Data Scientist • Montreal, Quebec</p>
-            <p><a href="mailto:ahdelvalle@gmail.com">ahdelvalle@gmail.com</a></p>
-            <p style="margin-top: 15px; font-size: 0.9em;">
-                This research is being conducted in coordination with the office of<br>
-                MP Rachel Bendayan (Outremont)
-            </p>
+            <p>Dr. Adrian Hernandez-del-Valle, PhD</p>
+            <p>Technology Solutions Consultant — SCRI, Montreal</p>
+            <p>Data source: Environment Canada MSC Datamart &amp; Collaboration Server</p>
+            <p>Methodology: ECCC 5-category classification per Minister Dabrusin's January 2026 response</p>
         </div>
+
     </div>
 </body>
 </html>
