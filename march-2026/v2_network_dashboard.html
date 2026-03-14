@@ -1,0 +1,611 @@
+# ============================================================================
+# COLAB CELL: V2.1 PRECIPITATION NETWORK AUDIT DASHBOARD
+# Ontario, Quebec & Alberta Edition
+# ============================================================================
+# Run this AFTER executing the V2.1 scraper (CanadaPrecipitationScraperV2).
+# Reads station_classification_results.csv from the V2 output directory.
+# ============================================================================
+
+import os
+import json
+import pandas as pd
+from datetime import datetime
+from google.colab import files
+
+# ============================================================================
+# CONFIGURATION — MATCHES V2.1 SCRAPER OUTPUT
+# ============================================================================
+OUTPUT_DIR = 'precipitation_audit_v2'
+AUDIT_CSV = 'precipitation_audit_v2/reports/station_classification_results.csv'
+
+# V2 Classification categories
+V2_CATEGORIES = {
+    'ACTIVE_FUNCTIONAL':         {'emoji': '✅', 'color': '#27ae60', 'label': 'Fully Functional'},
+    'ACTIVE_TRANSMISSION_ISSUE': {'emoji': '⚠️', 'color': '#f39c12', 'label': 'Transmission Issues'},
+    'ACTIVE_DATA_MISSING':       {'emoji': '❌', 'color': '#e74c3c', 'label': 'Data Missing'},
+    'NO_PRECIP_SENSOR':          {'emoji': '🔌', 'color': '#9b59b6', 'label': 'No Precip Sensor'},
+    'DECOMMISSIONED':            {'emoji': '🏚️', 'color': '#95a5a6', 'label': 'Decommissioned'},
+    'UNKNOWN':                   {'emoji': '❓', 'color': '#bdc3c7', 'label': 'Unknown'},
+}
+
+# Provinces covered — update this list if you add more provinces later
+TARGET_PROVINCES = ['ONTARIO', 'QUEBEC', 'ALBERTA']
+
+# ============================================================================
+# STEP 1: DEBUG — Check CSV structure
+# ============================================================================
+print("=" * 70)
+print("STEP 1: Checking V2.1 audit CSV structure")
+print("=" * 70)
+
+if os.path.exists(AUDIT_CSV):
+    df_debug = pd.read_csv(AUDIT_CSV)
+    print(f"\n✓ Found CSV with {len(df_debug)} rows")
+    print(f"\n📋 COLUMNS:")
+    for i, col in enumerate(df_debug.columns):
+        print(f"   {i+1}. '{col}'")
+
+    print(f"\n📋 CLASSIFICATION VALUES:")
+    if 'Classification' in df_debug.columns:
+        print(df_debug['Classification'].value_counts().to_string())
+    else:
+        print("   ⚠️ No 'Classification' column — check your V2 scraper output!")
+
+    print(f"\n📋 PROVINCE VALUES:")
+    if 'Province' in df_debug.columns:
+        print(df_debug['Province'].value_counts().to_string())
+    else:
+        print("   ⚠️ No 'Province' column!")
+
+    print(f"\n📋 COORDINATE CHECK:")
+    for col in ['Latitude', 'Longitude']:
+        if col in df_debug.columns:
+            non_null = df_debug[col].notna().sum()
+            print(f"   {col}: {non_null} non-null values")
+        else:
+            print(f"   ⚠️ '{col}' column not found!")
+else:
+    print(f"⚠️ CSV not found at: {AUDIT_CSV}")
+    print("   Run the V2.1 scraper first: scraper, results = run_full_audit(...)")
+
+# ============================================================================
+# STEP 2: Load and process data
+# ============================================================================
+print("\n" + "=" * 70)
+print("STEP 2: Loading V2.1 classification data")
+print("=" * 70)
+
+def load_v2_data():
+    """
+    Load classification CSV and compute overall + per-province stats.
+    Works for any set of provinces present in the data — not hardcoded.
+    """
+    # Overall stats
+    stats = {
+        'total_stations':       0,
+        'functional':           0,
+        'transmission_issue':   0,
+        'data_missing':         0,
+        'no_sensor':            0,
+        'decommissioned':       0,
+        'unknown':              0,
+        'effective_network':    0,
+        'effective_failure_rate': 0,
+        'functional_rate':      0,
+        'provinces': {}           # keyed by province name
+    }
+    map_stations = []
+
+    if not os.path.exists(AUDIT_CSV):
+        print(f"⚠️ File not found: {AUDIT_CSV}")
+        return stats, map_stations
+
+    df = pd.read_csv(AUDIT_CSV)
+    print(f"✓ Loaded {len(df)} stations")
+
+    # Overall counts
+    counts = df['Classification'].value_counts().to_dict()
+    stats['total_stations']      = len(df)
+    stats['functional']          = counts.get('ACTIVE_FUNCTIONAL', 0)
+    stats['transmission_issue']  = counts.get('ACTIVE_TRANSMISSION_ISSUE', 0)
+    stats['data_missing']        = counts.get('ACTIVE_DATA_MISSING', 0)
+    stats['no_sensor']           = counts.get('NO_PRECIP_SENSOR', 0)
+    stats['decommissioned']      = counts.get('DECOMMISSIONED', 0)
+    stats['unknown']             = counts.get('UNKNOWN', 0)
+
+    problematic = stats['transmission_issue'] + stats['data_missing']
+    stats['effective_network'] = stats['total_stations'] - stats['decommissioned']
+    if stats['effective_network'] > 0:
+        stats['effective_failure_rate'] = round(
+            problematic / stats['effective_network'] * 100, 1
+        )
+        stats['functional_rate'] = round(
+            stats['functional'] / stats['effective_network'] * 100, 1
+        )
+
+    # Per-province breakdown — driven by what's actually in the data,
+    # so adding more provinces to the scraper requires no change here.
+    if 'Province' in df.columns:
+        for prov in sorted(df['Province'].dropna().unique()):
+            prov_df = df[df['Province'] == prov]
+            prov_counts = prov_df['Classification'].value_counts().to_dict()
+            prov_func   = prov_counts.get('ACTIVE_FUNCTIONAL', 0)
+            prov_decomm = prov_counts.get('DECOMMISSIONED', 0)
+            prov_trans  = prov_counts.get('ACTIVE_TRANSMISSION_ISSUE', 0)
+            prov_miss   = prov_counts.get('ACTIVE_DATA_MISSING', 0)
+            prov_prob   = prov_trans + prov_miss
+            prov_eff    = len(prov_df) - prov_decomm
+            prov_rate   = round(prov_prob / prov_eff * 100, 1) if prov_eff > 0 else 0
+
+            stats['provinces'][prov] = {
+                'total':        len(prov_df),
+                'functional':   prov_func,
+                'problematic':  prov_prob,
+                'decommissioned': prov_decomm,
+                'eff_failure':  prov_rate,
+            }
+
+    print(f"\n📊 Classification summary:")
+    for cls, info in V2_CATEGORIES.items():
+        c = counts.get(cls, 0)
+        print(f"   {info['emoji']} {cls}: {c}")
+    print(f"\n   Effective failure rate: {stats['effective_failure_rate']}%")
+
+    print(f"\n📊 Per-province:")
+    for prov, ps in stats['provinces'].items():
+        print(f"   {prov}: {ps['total']} total | "
+              f"✅ {ps['functional']} | ⚠️❌ {ps['problematic']} | "
+              f"failure {ps['eff_failure']}%")
+
+    # Extract stations for map — valid Canadian coordinates only
+    if 'Latitude' in df.columns and 'Longitude' in df.columns:
+        valid = 0
+        for _, row in df.iterrows():
+            lat = row.get('Latitude')
+            lon = row.get('Longitude')
+            cls = row.get('Classification', 'UNKNOWN')
+
+            if pd.notna(lat) and pd.notna(lon):
+                try:
+                    lat_f, lon_f = float(lat), float(lon)
+                    # Canada bounding box (includes Alberta at ~49–60°N, ~110–120°W)
+                    if lat_f != 0 and lon_f != 0 and 41 <= lat_f <= 84 and -141 <= lon_f <= -52:
+                        valid += 1
+                        name = (str(row.get('Station_Name', 'Unknown'))
+                                .replace("'", "\\'").replace('"', '\\"'))
+                        map_stations.append({
+                            'lat':            lat_f,
+                            'lon':            lon_f,
+                            'name':           name,
+                            'id':             str(row.get('Station_ID', 'N/A')),
+                            'province':       str(row.get('Province', 'N/A')),
+                            'classification': cls,
+                            'coverage':       float(row.get('Data_Coverage_Percent', 0))
+                                              if pd.notna(row.get('Data_Coverage_Percent')) else 0,
+                        })
+                except (ValueError, TypeError):
+                    pass
+
+        print(f"\n🗺️ Stations with valid coordinates: {valid}")
+    else:
+        print("\n⚠️ Missing Latitude/Longitude columns — no map data")
+
+    return stats, map_stations
+
+
+stats, map_stations = load_v2_data()
+
+# ============================================================================
+# STEP 3: Generate HTML Dashboard
+# ============================================================================
+print("\n" + "=" * 70)
+print("STEP 3: Generating V2.1 HTML Dashboard")
+print("=" * 70)
+
+def generate_v2_dashboard(stats, map_stations):
+    current_date  = datetime.now().strftime('%B %d, %Y')
+    stations_js   = json.dumps(map_stations)
+    province_list = ', '.join(stats['provinces'].keys()) if stats['provinces'] else 'N/A'
+
+    # Map station counts per category for filter buttons
+    def map_count(cls):
+        return len([s for s in map_stations if s['classification'] == cls])
+
+    map_functional   = map_count('ACTIVE_FUNCTIONAL')
+    map_transmission = map_count('ACTIVE_TRANSMISSION_ISSUE')
+    map_missing      = map_count('ACTIVE_DATA_MISSING')
+    map_decommissioned = map_count('DECOMMISSIONED')
+    map_no_sensor    = map_count('NO_PRECIP_SENSOR')
+
+    # ------------------------------------------------------------------ #
+    # Per-province HTML cards — generated dynamically, one card per prov  #
+    # ------------------------------------------------------------------ #
+    province_flags = {'ONTARIO': '🍁', 'QUEBEC': '⚜️', 'ALBERTA': '🌾'}
+
+    province_cards_html = ''
+    for prov, ps in stats['provinces'].items():
+        flag = province_flags.get(prov, '📍')
+        province_cards_html += f'''
+            <div class="province-card">
+                <h3>{flag} {prov.title()}</h3>
+                <div class="province-stat"><span>Total stations</span><span class="val">{ps['total']}</span></div>
+                <div class="province-stat"><span>✅ Functional</span><span class="val" style="color:#27ae60">{ps['functional']}</span></div>
+                <div class="province-stat"><span>⚠️❌ Problematic</span><span class="val" style="color:#e74c3c">{ps['problematic']}</span></div>
+                <div class="province-stat"><span>🏚️ Decommissioned</span><span class="val" style="color:#95a5a6">{ps['decommissioned']}</span></div>
+                <div class="eff-rate">{ps['eff_failure']}% failure</div>
+            </div>'''
+
+    # Number of province columns — 3 for our current 3-province scope
+    n_provinces = max(len(stats['provinces']), 1)
+    province_grid_cols = f"repeat({n_provinces}, 1fr)"
+
+    html = f'''<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECCC Precipitation Network Audit — V2.1</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background: #f5f7fa; color: #2c3e50; line-height: 1.6; }}
+        .container {{ max-width: 1400px; margin: 0 auto; padding: 20px; }}
+
+        .header {{ background: linear-gradient(135deg, #1a2a3a 0%, #2c5282 100%);
+                   color: white; padding: 40px; border-radius: 15px;
+                   text-align: center; margin-bottom: 25px; }}
+        .header h1 {{ font-size: 2.2em; margin-bottom: 8px; }}
+        .header .subtitle {{ font-size: 1.1em; opacity: 0.85; }}
+        .header .v2-badge {{ display: inline-block; background: rgba(255,255,255,0.2);
+                             padding: 4px 14px; border-radius: 20px;
+                             font-size: 0.85em; margin-top: 10px; }}
+
+        .methodology-bar {{ background: white; padding: 20px 30px; border-radius: 10px;
+                            margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                            border-left: 5px solid #2c5282; }}
+        .methodology-bar h3 {{ color: #2c5282; margin-bottom: 8px; font-size: 1em; }}
+        .methodology-bar p {{ font-size: 0.9em; color: #555; }}
+
+        .headline-box {{ background: linear-gradient(135deg, #c53030 0%, #e53e3e 100%);
+                         color: white; padding: 25px; border-radius: 12px;
+                         text-align: center; margin-bottom: 25px;
+                         box-shadow: 0 4px 15px rgba(197, 48, 48, 0.3); }}
+        .headline-number {{ font-size: 3.5em; font-weight: bold; }}
+        .headline-label {{ font-size: 1.1em; opacity: 0.9; margin-top: 5px; }}
+
+        .cards-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+                       gap: 15px; margin-bottom: 25px; }}
+        .card {{ background: white; padding: 20px; border-radius: 12px;
+                 text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }}
+        .card .number {{ font-size: 2.2em; font-weight: bold; }}
+        .card .label {{ font-size: 0.8em; color: #777; text-transform: uppercase;
+                        margin-bottom: 8px; letter-spacing: 0.5px; }}
+        .card .detail {{ font-size: 0.85em; color: #999; margin-top: 5px; }}
+        .card.functional    {{ border-top: 4px solid #27ae60; }}
+        .card.functional    .number {{ color: #27ae60; }}
+        .card.transmission  {{ border-top: 4px solid #f39c12; }}
+        .card.transmission  .number {{ color: #f39c12; }}
+        .card.missing       {{ border-top: 4px solid #e74c3c; }}
+        .card.missing       .number {{ color: #e74c3c; }}
+        .card.sensor        {{ border-top: 4px solid #9b59b6; }}
+        .card.sensor        .number {{ color: #9b59b6; }}
+        .card.decommissioned {{ border-top: 4px solid #95a5a6; }}
+        .card.decommissioned .number {{ color: #95a5a6; }}
+        .card.total         {{ border-top: 4px solid #2c5282; }}
+        .card.total         .number {{ color: #2c5282; }}
+
+        /* Province grid: dynamic column count */
+        .province-grid {{ display: grid;
+                          grid-template-columns: {province_grid_cols};
+                          gap: 20px; margin-bottom: 25px; }}
+        .province-card {{ background: white; padding: 25px; border-radius: 12px;
+                          box-shadow: 0 2px 8px rgba(0,0,0,0.08); }}
+        .province-card h3 {{ margin-bottom: 15px; color: #2c3e50; }}
+        .province-stat {{ display: flex; justify-content: space-between;
+                          padding: 8px 0; border-bottom: 1px solid #f0f0f0; }}
+        .province-stat:last-child {{ border-bottom: none; }}
+        .province-stat .val {{ font-weight: bold; }}
+        .province-card .eff-rate {{ font-size: 2em; font-weight: bold;
+                                    color: #e74c3c; text-align: center; margin-top: 10px; }}
+
+        .map-section {{ background: white; padding: 30px; border-radius: 12px;
+                        margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }}
+        .map-title {{ text-align: center; font-size: 1.4em;
+                      margin-bottom: 15px; color: #2c3e50; }}
+        #map {{ height: 600px; border-radius: 10px; border: 1px solid #e0e0e0; }}
+        .legend {{ text-align: center; margin: 15px 0; }}
+        .legend-item {{ display: inline-block; margin: 5px 12px; font-size: 0.9em; }}
+        .legend-dot {{ display: inline-block; width: 14px; height: 14px;
+                       border-radius: 50%; margin-right: 5px; vertical-align: middle; }}
+
+        .filter-controls {{ text-align: center; margin-bottom: 15px; }}
+        .filter-btn {{ padding: 6px 14px; margin: 3px; border: 1px solid #ddd;
+                       border-radius: 20px; background: white; cursor: pointer;
+                       font-size: 0.85em; transition: all 0.2s; }}
+        .filter-btn:hover {{ background: #f0f0f0; }}
+        .filter-btn.active {{ background: #2c5282; color: white; border-color: #2c5282; }}
+
+        .implications-section {{ background: white; padding: 35px; border-radius: 12px;
+                                  margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }}
+        .implications-section h2 {{ text-align: center; font-size: 1.5em;
+                                     margin-bottom: 25px; color: #2c3e50; }}
+        .impl-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }}
+        .impl-card {{ padding: 20px; border-radius: 10px; color: white; }}
+        .impl-card.agri  {{ background: linear-gradient(135deg, #c53030, #e53e3e); }}
+        .impl-card.paris {{ background: linear-gradient(135deg, #276749, #38a169); }}
+        .impl-card.science {{ background: linear-gradient(135deg, #2b6cb0, #4299e1); }}
+        .impl-card h3 {{ margin-bottom: 10px; }}
+
+        .footer {{ background: linear-gradient(135deg, #1a2a3a 0%, #2d3748 100%);
+                   color: white; padding: 35px; border-radius: 12px; text-align: center; }}
+        .footer a {{ color: #63b3ed; }}
+
+        @media (max-width: 900px) {{
+            .province-grid {{ grid-template-columns: 1fr 1fr !important; }}
+        }}
+        @media (max-width: 600px) {{
+            .province-grid {{ grid-template-columns: 1fr !important; }}
+            .headline-number {{ font-size: 2.5em; }}
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <div class="header">
+            <h1>🇨🇦 ECCC Precipitation Network Audit</h1>
+            <p class="subtitle">{province_list} — {stats['total_stations']} Stations Analyzed</p>
+            <span class="v2-badge">V2.1 — ECCC 5-Category Classification per Minister Dabrusin's Response</span>
+        </div>
+
+        <div class="methodology-bar">
+            <h3>📋 Methodology (Updated per ECCC Guidance, January 2026)</h3>
+            <p>This audit implements the classification framework from Minister Julie Dabrusin's official
+            response. Data sources updated to ECCC-recommended MSC Datamart and Collaboration Server
+            (obsolete FTP removed). Stations classified into 5 categories per ECCC guidance.
+            Effective failure rate excludes decommissioned stations. Scope: {province_list}.</p>
+        </div>
+
+        <div class="headline-box">
+            <div class="headline-number">{stats['effective_failure_rate']}%</div>
+            <div class="headline-label">Effective Failure Rate Among Active Stations<br>
+                <small>({stats['transmission_issue'] + stats['data_missing']} of
+                {stats['effective_network']} non-decommissioned stations have data problems)</small>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card total">
+                <div class="label">Total Audited</div>
+                <div class="number">{stats['total_stations']}</div>
+                <div class="detail">Full ECCC inventory</div>
+            </div>
+            <div class="card functional">
+                <div class="label">✅ Functional</div>
+                <div class="number">{stats['functional']}</div>
+                <div class="detail">{stats['functional_rate']}% of active network</div>
+            </div>
+            <div class="card transmission">
+                <div class="label">⚠️ Transmission Issues</div>
+                <div class="number">{stats['transmission_issue']}</div>
+                <div class="detail">Data gaps / intermittent</div>
+            </div>
+            <div class="card missing">
+                <div class="label">❌ Data Missing</div>
+                <div class="number">{stats['data_missing']}</div>
+                <div class="detail">Active but no data</div>
+            </div>
+            <div class="card sensor">
+                <div class="label">🔌 No Precip Sensor</div>
+                <div class="number">{stats['no_sensor']}</div>
+                <div class="detail">Not equipped</div>
+            </div>
+            <div class="card decommissioned">
+                <div class="label">🏚️ Decommissioned</div>
+                <div class="number">{stats['decommissioned']}</div>
+                <div class="detail">Historical only</div>
+            </div>
+        </div>
+
+        <!-- Province cards: generated dynamically for all provinces in the data -->
+        <div class="province-grid">
+            {province_cards_html}
+        </div>
+
+        <div class="map-section">
+            <h2 class="map-title">📍 Station Classification Map — {province_list}</h2>
+
+            <div class="filter-controls">
+                <button class="filter-btn" id="btn-ALL"
+                    onclick="filterMap('ALL')">All ({len(map_stations)})</button>
+                <button class="filter-btn" id="btn-ACTIVE_FUNCTIONAL"
+                    onclick="filterMap('ACTIVE_FUNCTIONAL')">✅ Functional ({map_functional})</button>
+                <button class="filter-btn" id="btn-ACTIVE_TRANSMISSION_ISSUE"
+                    onclick="filterMap('ACTIVE_TRANSMISSION_ISSUE')">⚠️ Transmission ({map_transmission})</button>
+                <button class="filter-btn" id="btn-ACTIVE_DATA_MISSING"
+                    onclick="filterMap('ACTIVE_DATA_MISSING')">❌ Missing ({map_missing})</button>
+                <button class="filter-btn" id="btn-NO_PRECIP_SENSOR"
+                    onclick="filterMap('NO_PRECIP_SENSOR')">🔌 No Sensor ({map_no_sensor})</button>
+                <button class="filter-btn" id="btn-DECOMMISSIONED"
+                    onclick="filterMap('DECOMMISSIONED')">🏚️ Decommissioned ({map_decommissioned})</button>
+            </div>
+
+            <div class="legend">
+                <span class="legend-item"><span class="legend-dot" style="background:#27ae60"></span>Functional</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#f39c12"></span>Transmission Issue</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#e74c3c"></span>Data Missing</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#9b59b6"></span>No Precip Sensor</span>
+                <span class="legend-item"><span class="legend-dot" style="background:#95a5a6"></span>Decommissioned</span>
+            </div>
+
+            <div id="map"></div>
+        </div>
+
+        <div class="implications-section">
+            <h2>Policy Implications</h2>
+            <div class="impl-grid">
+                <div class="impl-card agri">
+                    <h3>🌾 Agricultural Insurance</h3>
+                    <p>{stats['effective_failure_rate']}% of active stations failing means actuarial
+                    models for AgriInsurance lack the precipitation data they need. This directly
+                    affects crop insurance pricing for farmers across {province_list}.</p>
+                </div>
+                <div class="impl-card paris">
+                    <h3>🌡️ Paris Agreement (Art. 13)</h3>
+                    <p>Canada committed to transparent, accurate climate monitoring. With
+                    {stats['transmission_issue'] + stats['data_missing']} active stations failing
+                    to transmit data, the precipitation record has permanent gaps that undermine
+                    international reporting obligations.</p>
+                </div>
+                <div class="impl-card science">
+                    <h3>🔬 Scientific Integrity</h3>
+                    <p>Climate research requires continuous long-term records. Stations classified as
+                    ACTIVE_TRANSMISSION_ISSUE create gaps that distort trend analysis and
+                    regime change detection.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3>📄 Evidence Package — V2.1</h3>
+            <p style="margin: 15px 0; line-height: 2;">
+                <strong>Methodology:</strong> ECCC 5-category classification per Minister Dabrusin's response (Jan 2026)<br>
+                <strong>Scope:</strong> {province_list}<br>
+                <strong>Data Sources:</strong> MSC Datamart &amp; Collaboration Server (ECCC recommended)<br>
+                <strong>Audit Date:</strong> {current_date}<br>
+                <strong>Stations Audited:</strong> {stats['total_stations']}
+            </p>
+            <p style="margin-top: 15px;"><strong>Dr. Adrian Hernandez-del-Valle, PhD</strong></p>
+            <p>SCRI — Services Communautaires pour Réfugiés et Immigrants, Montreal</p>
+            <p><a href="mailto:ahdv@hotmail.com">ahdv@hotmail.com</a> | 514-208-5677</p>
+            <p style="margin-top: 15px;">
+                <a href="https://github.com/ahdelvalle/canada-weather-network-audit">GitHub</a> |
+                <a href="https://ahdelvalle.github.io/canada-weather-network-audit/">Dashboard</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // FIX: map center updated to cover Ontario + Quebec + Alberta.
+        // fitBounds corrects it precisely after data loads, but initial
+        // view should already show all 3 provinces without a jarring jump.
+        var map = L.map('map').setView([52.0, -95.0], 4);
+
+        L.tileLayer('https://{{s}}.tile.openstreetmap.org/{{z}}/{{x}}/{{y}}.png', {{
+            attribution: '© OpenStreetMap', maxZoom: 18
+        }}).addTo(map);
+
+        var allStations = {stations_js};
+        var markers = [];
+        var currentFilter = 'ALL';
+
+        var classColors = {{
+            'ACTIVE_FUNCTIONAL':         '#27ae60',
+            'ACTIVE_TRANSMISSION_ISSUE': '#f39c12',
+            'ACTIVE_DATA_MISSING':       '#e74c3c',
+            'NO_PRECIP_SENSOR':          '#9b59b6',
+            'DECOMMISSIONED':            '#95a5a6',
+            'UNKNOWN':                   '#bdc3c7'
+        }};
+
+        var classLabels = {{
+            'ACTIVE_FUNCTIONAL':         '✅ FUNCTIONAL',
+            'ACTIVE_TRANSMISSION_ISSUE': '⚠️ TRANSMISSION ISSUE',
+            'ACTIVE_DATA_MISSING':       '❌ DATA MISSING',
+            'NO_PRECIP_SENSOR':          '🔌 NO PRECIP SENSOR',
+            'DECOMMISSIONED':            '🏚️ DECOMMISSIONED',
+            'UNKNOWN':                   '❓ UNKNOWN'
+        }};
+
+        // FIX: active button state driven by the filter string, not by event.target.
+        // This is reliable across all browsers and on the initial render call.
+        function setActiveButton(filter) {{
+            document.querySelectorAll('.filter-btn').forEach(function(btn) {{
+                btn.classList.remove('active');
+            }});
+            var targetBtn = document.getElementById('btn-' + filter);
+            if (targetBtn) {{ targetBtn.classList.add('active'); }}
+        }}
+
+        function renderMarkers(filter) {{
+            markers.forEach(function(m) {{ map.removeLayer(m); }});
+            markers = [];
+
+            allStations.forEach(function(s) {{
+                if (filter !== 'ALL' && s.classification !== filter) return;
+
+                var color   = classColors[s.classification] || '#bdc3c7';
+                var label   = classLabels[s.classification] || s.classification;
+                var radius  = s.classification === 'DECOMMISSIONED' ? 4 : 7;
+                var opacity = s.classification === 'DECOMMISSIONED' ? 0.4 : 0.8;
+
+                var m = L.circleMarker([s.lat, s.lon], {{
+                    radius:      radius,
+                    fillColor:   color,
+                    color:       '#333',
+                    weight:      1,
+                    fillOpacity: opacity
+                }});
+
+                var popup = '<b style="color:' + color + '">' + s.name + '</b><br>' +
+                    'ID: ' + s.id + '<br>' +
+                    'Province: ' + s.province + '<br>' +
+                    '<b style="color:' + color + '">' + label + '</b>';
+                if (s.coverage > 0) {{
+                    popup += '<br>Coverage: ' + s.coverage + '%';
+                }}
+
+                m.bindPopup(popup);
+                m.on('mouseover', function() {{ this.openPopup(); }});
+                m.addTo(map);
+                markers.push(m);
+            }});
+
+            setActiveButton(filter);
+        }}
+
+        function filterMap(classification) {{
+            currentFilter = classification;
+            renderMarkers(classification);
+        }}
+
+        // Initial render with correct button state
+        renderMarkers('ALL');
+
+        // Fit map to actual data extent
+        var points = allStations.map(function(s) {{ return [s.lat, s.lon]; }});
+        if (points.length > 0) {{
+            map.fitBounds(points, {{ padding: [30, 30] }});
+        }}
+    </script>
+</body>
+</html>'''
+    return html
+
+
+# Generate and save
+html_content = generate_v2_dashboard(stats, map_stations)
+output_path = os.path.join(OUTPUT_DIR, 'v2_network_dashboard.html')
+os.makedirs(OUTPUT_DIR, exist_ok=True)
+
+with open(output_path, 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
+print(f"\n✅ Dashboard saved: {output_path}")
+print(f"   File size: {os.path.getsize(output_path) / 1024:.1f} KB")
+print(f"   Stations on map: {len(map_stations)}")
+
+# Optional: zip everything before downloading
+import shutil
+zip_path = os.path.join(OUTPUT_DIR, '..', 'precipitation_audit_v2')
+shutil.make_archive(zip_path, 'zip', OUTPUT_DIR)
+print(f"\n📦 Archive: precipitation_audit_v2.zip")
+
+print("\n⬇️ Downloading dashboard...")
+files.download(output_path)
+
+print("\n" + "=" * 70)
+print("COMPLETE!")
+print("=" * 70)
