@@ -14,7 +14,7 @@
         }
         .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
         .header { text-align: center; margin-bottom: 50px; }
-        .header h1 { font-size: 2.5em; margin-bottom: 15px; } 
+        .header h1 { font-size: 2.5em; margin-bottom: 15px; }
         .header p { font-size: 1.2em; opacity: 0.8; }
         .alert-banner {
             background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
@@ -133,17 +133,17 @@
         </div>
 
         <div class="alert-banner">
-            ⚠️ UPDATE (March 2026): Using ECCC's own methodology, 21.2% of active stations failing across Ontario, Quebec, Alberta &amp; British Columbia — 228 stations referred for investigation. Zero improvement in Ontario and Quebec since February 2026. BC added for first time: 49 stations flagged.
+            ⚠️ UPDATE (April 2026): Using ECCC's own methodology, 21.2% of active stations failing across Ontario, Quebec, Alberta &amp; British Columbia — 228 stations referred for investigation. British Columbia added for the first time: 49 stations flagged (16.9% failure rate).
         </div>
 
         <div class="reports-grid">
 
             <!-- ============================================================ -->
-            <!-- MARCH 2026 — LATEST                                          -->
+            <!-- APRIL 2026 — LATEST                                          -->
             <!-- ============================================================ -->
-            <a class="report-card latest" href="march-2026/v2_network_dashboard.html">
+            <a class="report-card latest" href="april-2026/v2_network_dashboard.html">
                 <span class="badge">LATEST</span>
-                <h2><span>🍁</span>March 2026</h2>
+                <h2><span>🍁</span>April 2026</h2>
 
                 <div class="stats-row">
                     <div class="stat">
@@ -158,7 +158,7 @@
                         <div class="number">228</div>
                         <div class="label">Problematic</div>
                     </div>
-                </div>                
+                </div>
 
                 <div class="province-row" style="grid-template-columns: repeat(4, 1fr);">
                     <div class="province-chip">
@@ -182,16 +182,66 @@
                         <div class="psub">33 problematic / 287 active</div>
                     </div>
                 </div>
-                
+
                 <div class="report-meta">
                     <p>
                         <strong>Scope:</strong> Ontario • Quebec • Alberta • British Columbia (Full ECCC Inventory — 5,805 stations)<br>
                         <strong>Methodology:</strong> ECCC 5-category classification per Minister Dabrusin's response<br>
-                        <strong>Key finding:</strong> Quebec 34.1% failure — worst of four provinces. Zero improvement in Ontario (48) and Quebec (98) since February 2026. British Columbia added for the first time: 49 problematic stations, concentrated along the coast and interior highlands (16.9% failure rate). Alberta unchanged at 33 problematic stations. All 228 classified as ACTIVE_TRANSMISSION_ISSUE — stations ECCC considers operational yet failing to deliver reliable precipitation records.
+                        <strong>Key finding:</strong> Quebec remains worst at 34.1% (98 stations). British Columbia added for the first time: 49 problematic stations at 16.9% failure rate. Ontario stable at 48 stations (22.6%). Alberta unchanged at 33 stations (11.5%). All 228 classified as ACTIVE_TRANSMISSION_ISSUE — stations ECCC considers operational yet failing to deliver reliable precipitation records.
                     </p>
                 </div>
                 <span class="view-dashboard">📍 View Interactive Map →</span>
             </a>
+
+            <!-- ============================================================ -->
+            <!-- MARCH 2026                                                    -->
+            <!-- ============================================================ -->
+            <a class="report-card" href="march-2026/v2_network_dashboard.html">
+                <h2><span>🍁</span>March 2026</h2>
+
+                <div class="stats-row">
+                    <div class="stat">
+                        <div class="number">22.7%</div>
+                        <div class="label">Effective Failure Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="number">4,058</div>
+                        <div class="label">Stations Audited</div>
+                    </div>
+                    <div class="stat">
+                        <div class="number">178</div>
+                        <div class="label">Problematic</div>
+                    </div>
+                </div>
+
+                <div class="province-row">
+                    <div class="province-chip">
+                        <div class="pname">⚜️ Quebec</div>
+                        <div class="prate">34.1%</div>
+                        <div class="psub">98 problematic / 287 active</div>
+                    </div>
+                    <div class="province-chip">
+                        <div class="pname">🍁 Ontario</div>
+                        <div class="prate amber">22.3%</div>
+                        <div class="psub">47 problematic / 211 active</div>
+                    </div>
+                    <div class="province-chip">
+                        <div class="pname">🌾 Alberta</div>
+                        <div class="prate amber">11.5%</div>
+                        <div class="psub">33 problematic / 287 active</div>
+                    </div>
+                </div>
+
+                <div class="report-meta">
+                    <p>
+                        <strong>Scope:</strong> Ontario • Quebec • Alberta (Full ECCC Inventory — 4,058 stations)<br>
+                        <strong>Methodology:</strong> ECCC 5-category classification per Minister Dabrusin's response<br>
+                        <strong>Key finding:</strong> Quebec 34.1% failure — worst of three provinces. Zero improvement in Ontario (47) and Quebec (98) since February 2026. Alberta added for the first time: 33 problematic stations in the agricultural belt (Peace River, Red Deer corridor, Lethbridge). All 178 classified as ACTIVE_TRANSMISSION_ISSUE — stations ECCC considers operational yet failing to deliver reliable precipitation records.
+                    </p>
+                </div>
+                <span class="view-dashboard">📍 View Interactive Map →</span>
+            </a>
+
             <!-- ============================================================ -->
             <!-- FEBRUARY 2026                                                 -->
             <!-- ============================================================ -->
@@ -255,7 +305,7 @@
             </a>
 
             <!-- ============================================================ -->
-            <!-- DECEMBER 2025                                                  -->
+            <!-- DECEMBER 2025                                                 -->
             <!-- ============================================================ -->
             <a class="report-card" href="december-2025/index.html">
                 <h2><span>🍁</span>December 2025</h2>
