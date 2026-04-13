@@ -1,1 +1,287 @@
-# Environment Canada Weather Station Network Failure Report\n## Ontario and Quebec Provinces\n\n**Report Date:** 2025-11-10 16:25:28\n**Prepared for:** MP Rachel Bendayan's Office\n**Analyst:** Adrian Hernandez-del-Valle, PhD\n\n---\n\n## Executive Summary\n\nThis report documents systematic failures in Environment Canada's weather station network across Ontario and Quebec. Based on testing of 23 major weather stations:\n\n- **12 stations (52.2%) are currently INACTIVE**\n- **11 stations (47.8%) are functioning normally**\n\n⚠️ **CRITICAL:** The failure rate of 52.2% represents a significant degradation in Canada's climate monitoring infrastructure.\n\n---\n\n## Provincial Breakdown\n\n### ONTARIO\n\n- Total: 13 stations\n- Active: 7 (53.8%)\n- Inactive: 6 (46.2%)\n\n### QUEBEC\n\n- Total: 10 stations\n- Active: 4 (40.0%)\n- Inactive: 6 (60.0%)\n\n---\n\n## Inactive Stations List\n\nThe following 12 stations are not transmitting data:\n\n- **THUNDER BAY A** (ID: 48291) - ONTARIO\n- **SAULT STE MARIE A** (ID: 49346) - ONTARIO\n- **NORTH BAY A** (ID: 49789) - ONTARIO\n- **TIMMINS VICTOR M POWER** (ID: 48071) - ONTARIO\n- **MOOSONEE UA** (ID: 49000) - ONTARIO\n- **KENORA A** (ID: 49069) - ONTARIO\n- **GATINEAU** (ID: 26899) - QUEBEC\n- **SHERBROOKE A** (ID: 26839) - QUEBEC\n- **TROIS-RIVIERES A** (ID: 26976) - QUEBEC\n- **SEPT-ILES A** (ID: 26871) - QUEBEC\n- **KUUJJUAQ A** (ID: 26510) - QUEBEC\n- **ROUYN-NORANDA A** (ID: 27051) - QUEBEC\n\n---\n\n## Recommendations\n\n1. Immediate investigation of station failures\n2. Public disclosure of network status\n3. Timeline for repairs/replacements\n4. Budget allocation for network maintenance\n\n*Report generated 2025-11-10 at 16:25:28*\n
+Environment Canada Precipitation Network — Evidence Update
+Follow-Up to Minister Julie Dabrusin's Response (January 2026)
+Expanded to Include Alberta
+Date: 2026-04-13
+Prepared by: Adrian Hernandez-del-Valle, PhD
+Institution: SCRI, Montreal
+For: MP Rachel Bendayan's Office
+Provinces covered: Ontario, Quebec, Alberta
+---
+Purpose
+This report provides a detailed follow-up to the response received from
+Minister Julie Dabrusin's office regarding the operational status of
+Environment Canada's weather station network. We have implemented the
+classification framework described in the Minister's response and applied
+it systematically across the full ECCC inventory for Ontario, Quebec, and
+Alberta (added in this update as an agriculturally critical western province).
+Methodology Updates Per ECCC Guidance
+Following ECCC's recommendations, we have:
+Replaced the obsolete FTP source with ECCC-recommended inventory sources
+Used 'DAILY TOTAL PRECIPITATION' element to filter precipitation-capable stations
+Verified first and last years for each station per ECCC guidance
+Classified stations into ECCC's 5 failure categories
+Expanded analysis from 24 stations to 5805 stations in the inventory
+Extended geographic scope to include Alberta
+Findings
+Of 5805 stations in the ECCC inventory for Ontario, Quebec, and Alberta:
+848 are fully functional with precipitation data
+228 are listed as active but have data availability problems
+4729 are decommissioned (historical data available as ECCC noted)
+0 lack precipitation sensors
+The effective failure rate among non-decommissioned stations is 21.2%.
+Findings by Province
+ALBERTA (1464 stations): 254 functional, 33 problematic (11.5% failure rate), 1177 decommissioned
+BRITISH COLUMBIA (1747 stations): 241 functional, 49 problematic (16.9% failure rate), 1457 decommissioned
+ONTARIO (1566 stations): 164 functional, 48 problematic (22.6% failure rate), 1354 decommissioned
+QUEBEC (1028 stations): 189 functional, 98 problematic (34.1% failure rate), 741 decommissioned
+Stations Requiring NIRT Investigation
+Per ECCC's recommendation, the following stations should be referred to
+the National Inquiry Response Team for individual status assessment:
+ACTIVE_TRANSMISSION_ISSUE (228 stations)
+ALBERTA:
+GLENEVIS AGCM (ID: 47074)
+KILLAM AGDM (ID: 32313)
+HOLDEN SOUTH (ID: 1898)
+OLIVER AGDM (ID: 41783)
+RADWAY AGCM (ID: 47089)
+UNIVERSITY OF ALBERTA METABOLIC CENTRE (ID: 1801)
+PIBROCH AGCM (ID: 55338)
+REDWATER INDUSTRIAL AGCM (ID: 55538)
+LLOYDMINSTER LITE (ID: 55478)
+CABIN LAKE AGCM (ID: 49948)
+CRAIGMYLE (ID: 2068)
+FINNEGAN AGCM (ID: 52459)
+RED DEER REGIONAL A (ID: 51440)
+RED DEER OVERLAP (ID: 54478)
+SIBBALD WESTGARD (ID: 2144)
+GLENWOOD (ID: 45748)
+MILK RIVER RIDGE RESERVOIR (ID: 45767)
+BULLHORN COULEE RESERVOIR (ID: 45747)
+BULLHORN HEADWATERS (ID: 45749)
+KANANASKIS POCATERRA (ID: 2404)
+ST. MARY RESERVOIR (ID: 45727)
+WHITECOURT A (ID: 52982)
+NAKISKA RIDGETOP (ID: 10104)
+ATHABASCA 1 (ID: 2459)
+WHITECOURT A (ID: 2632)
+WHITECOURT A (ID: 51444)
+HINTON VALLEY (ID: 29926)
+DUCK LAKE AGCM (ID: 55419)
+EGG ISLAND (ID: 31027)
+MANNING (ID: 2750)
+MANNING AGDM (ID: 32394)
+SPIRIT RIVER AUTO STATION (ID: 29633)
+BEAVERDAM AGCM (ID: 55418)
+BRITISH COLUMBIA:
+COWICHAN LAKE FORESTRY (ID: 37)
+DISCOVERY ISLAND (ID: 27226)
+KELP REEFS (ID: 10853)
+PORT RENFREW (ID: 82)
+RACE ROCKS (ID: 10943)
+VICTORIA HARBOUR A (ID: 53479)
+WILLIAM HEAD (ID: 129)
+CAMPBELL RIVER A (ID: 52979)
+CORTES ISLAND TIBER BAY (ID: 160)
+NANAIMO A (ID: 52941)
+PINE ISLAND (ID: 200)
+PORT HARDY AIRPORT (ID: 54602)
+SISTERS ISLAND (ID: 6813)
+CARMANAH POINT (ID: 239)
+CONUMA RIVER HATCHERY (ID: 242)
+TOFINO A (ID: 52960)
+GRIEF POINT (ID: 27449)
+POWELL RIVER A (ID: 52018)
+MASSET A (ID: 52940)
+BELLA COOLA A (ID: 52978)
+LUCY ISLAND LIGHTSTATION (ID: 6824)
+STEWART A (ID: 434)
+STEWART A (ID: 53438)
+SMITHERS A (ID: 487)
+PEMBERTON AIRPORT (WIND) (ID: 46747)
+FORT ST JAMES (ID: 588)
+FORT ST JAMES GOLF CLUB (ID: 55363)
+ABBOTSFORD A (ID: 54238)
+BLACKCOMB BASE SLIDING CENTER (ID: 45787)
+VANCOUVER BOUNDARY BAY (ID: 55458)
+LANGLEY REGIONAL (ID: 55460)
+MAPLE RIDGE KANAKA CREEK (ID: 787)
+RICHMOND OPERATIONS CENTRE (ID: 48448)
+PITT MEADOWS (ID: 55462)
+SANDHEADS CS (ID: 6831)
+TSAWWASSEN FERRY AUTO (ID: 50228)
+VANCOUVER HARBOUR (ID: 55438)
+PRINCETON A (ID: 52958)
+CASTLEGAR A (ID: 52938)
+KASLO (ID: 1124)
+SPARWOOD A (ID: 52959)
+BLUE RIVER A (ID: 53424)
+DARFIELD (ID: 1257)
+GLACIER NP ROGERS PASS (ID: 1363)
+GOLDEN A (ID: 52980)
+GOLDSTREAM RIVER (ID: 1365)
+GLACIER NP MT FIDELITY (ID: 1345)
+CHETWYND A (ID: 52939)
+PINK MOUNTAIN 3 (ID: 54818)
+ONTARIO:
+PICKLE LAKE A (ID: 50478)
+RED LAKE A (ID: 50248)
+RED LAKE A (ID: 52419)
+WEAGAMOW LAKE (ID: 55362)
+GERALDTON A (ID: 54240)
+MARATHON A (ID: 53138)
+THUNDER BAY A (ID: 50132)
+WAWA A (ID: 52818)
+WAWA A (ID: 52998)
+KILLARNEY (AUT) (ID: 8997)
+CHAPLEAU A (ID: 53602)
+CHAPLEAU A (ID: 53603)
+CHAPLEAU AIRPORT (ID: 55258)
+KAPUSKASING A (ID: 54260)
+KIRKLAND LAKE (ID: 55367)
+MOOSONEE RCS (ID: 55379)
+OGOKI POST (ID: 55361)
+GREAT DUCK ISLAND (AUT) (ID: 7981)
+SANDFIELD (ID: 27603)
+GRENADIER ISLAND (ID: 10903)
+KINGSTON A (ID: 52985)
+LAGOON CITY (ID: 10911)
+NIPISSING (ID: 45547)
+WASAGA PROVINCIAL PARK (ID: 55778)
+WIARTON A (ID: 54259)
+WESTERN ISLAND (AUT) (ID: 7733)
+COVE ISLAND (AUT) (ID: 9004)
+CHATHAM WPCP (ID: 4619)
+CEDAR SPRINGS (ID: 55360)
+LONG POINT (AUT) (ID: 9026)
+ST CATHARINES A (ID: 53000)
+WINDSOR A (ID: 52838)
+PORT COLBORNE (AUT) (ID: 9005)
+ERIEAU (AUT) (ID: 9006)
+GLEN ALLAN (ID: 4765)
+GUELPH TURFGRASS (ID: 45407)
+LONDON A (ID: 50093)
+STRATFORD WWTP (ID: 4823)
+BURLINGTON PIERS (AUT) (ID: 7868)
+PA KING CITY (ID: 53778)
+STIRLING (ID: 46387)
+TORONTO SOLAR RADIATION (ID: 41863)
+TORONTO BUTTONVILLE A (ID: 54239)
+TORONTO BUTTONVILLE A (ID: 53678)
+TRENTON AWOS (ID: 30723)
+MOUNTAINVIEW (ID: 4838)
+COE HILL (ID: 43923)
+PETERBOROUGH TRENTU FARM (ID: 55365)
+QUEBEC:
+DONNACONA 2 (ID: 5222)
+ILE D'ORLEANS - QUAI DE ST-JEAN (ID: 55779)
+ILE D'ORLEANS (ID: 8989)
+JOLIETTE VILLE (ID: 5230)
+MASCOUCHE (ID: 5244)
+QUEBEC INTL A (ID: 51457)
+ST COME (ID: 5268)
+ST DONAT (ID: 5269)
+ST JACQUES (ID: 5274)
+ST JANVIER (ID: 5275)
+STE THERESE OUEST (ID: 5285)
+TROIS-RIVIERES (ID: 10764)
+TROIS RIVIERES AQUEDUC (ID: 5201)
+ILE AUX GRUES (ID: 10247)
+LAC SAINT-PIERRE (ID: 10975)
+AUTEUIL (ID: 5313)
+BEAUSEJOUR (ID: 5315)
+BROME (ID: 5325)
+DRUMMONDVILLE (ID: 5348)
+GEORGEVILLE (ID: 5368)
+HUNTINGDON (ID: 5374)
+IBERVILLE (ID: 5376)
+LAC MEGANTIC (ID: 51638)
+MILAN (ID: 5411)
+NICOLET (ID: 5426)
+NOTRE DAME DES BOIS (ID: 5428)
+PHILIPSBURG (ID: 5431)
+ST AMABLE (ID: 5447)
+ST EPHREM (ID: 5462)
+ST FERDINAND (ID: 5463)
+ST FLAVIEN (ID: 5464)
+STE GENEVIEVE (ID: 5484)
+ST GUILLAUME (ID: 5486)
+ST JEAN (ID: 55461)
+STE MADELEINE (ID: 5501)
+ST SEBASTIEN (ID: 5514)
+ST SEVERIN (ID: 5516)
+ST THEOPHILE (ID: 5519)
+ST WENCESLAS (ID: 5522)
+SAWYERVILLE NORD (ID: 5526)
+VALLEE JONCTION (ID: 5545)
+VALLEYFIELD (ID: 5562)
+LAC MEMPHREMAGOG (ID: 10801)
+OTTAWA GATINEAU A (ID: 53001)
+MANIWAKI UA (ID: 5607)
+MONTREAL MIRABEL INTL A (ID: 49608)
+MONTEBELLO (SEDBERGH) (ID: 5612)
+MONT LAURIER (ID: 5615)
+NOMININGUE (ID: 5618)
+POINTE AU CHENE (ID: 5623)
+SHAWVILLE (ID: 5633)
+SHEENBORO (ID: 5635)
+LOURDES DE BLANC SABLON A (ID: 54298)
+CAPE WHITTLE (ID: 5672)
+CAP-ROUGE (ID: 10963)
+GODBOUT (ID: 5686)
+GRANDES BERGERONNES (ID: 5687)
+ILE AUX PERROQUETS (ID: 10937)
+MONT-TREMBLANT (ID: 55678)
+POINTE DE L'ISLET (ID: 10966)
+POINTE CLAVEAU (ID: 10964)
+STE ROSE DU NORD (ID: 5738)
+SEPT-ILES A (ID: 52199)
+AMQUI (ID: 26887)
+CAP-D'ESPOIR (ID: 9001)
+GASPE A (ID: 54299)
+HONFLEUR (ID: 5801)
+ILES DE LA MADELEINE A (ID: 51139)
+ILES DE LA MADELEINE A (ID: 53002)
+RIMOUSKI (ID: 5836)
+STE GERMAINE (ID: 5854)
+ILE BICQUETTE (ID: 10938)
+BAGOTVILLE AIRPORT (ID: 55359)
+CHAMOUCHOUANE (ID: 26797)
+LAC BOUCHETTE (ID: 5913)
+LAC STE CROIX (ID: 5918)
+LATERRIERE (ID: 30722)
+PERIBONCA (ID: 5929)
+ROBERVAL A (ID: 54300)
+CHICOUTIMI ST-HONORE A (ID: 55459)
+GRANDE ANSE (ID: 5954)
+RAPIDE DES JOACHIMS (ID: 5993)
+ROUYN-NORANDA A (ID: 50090)
+EASTMAIN RIVER A (ID: 53338)
+LA GRANDE IV A (ID: 6038)
+WASKAGANISH A (ID: 53018)
+WEMINDJI A (ID: 53159)
+AKULIVIK A (ID: 54068)
+IVUJIVIK A (ID: 54066)
+UMIUJAQ A (ID: 54070)
+AUPALUK A (ID: 54058)
+KANGIQSUJUAQ A (ID: 54062)
+KANGIRSUK A (ID: 54072)
+KANGIQSUALUJJUAQ A (ID: 54074)
+QUAQTAQ A (ID: 54060)
+SALLUIT A (ID: 54064)
+SCHEFFERVILLE (ID: 30164)
+TASIUJAQ A (ID: 54019)
+---
+Requested Actions
+NIRT Referral: Submit the above station list to ECCC's National Inquiry
+Response Team for individual station status assessment.
+Maintenance Response: For stations confirmed to be active but not
+transmitting, request confirmation that the 2-5 business day corrective
+maintenance response timeline (cited in ECCC's response) is being met.
+Agricultural Impact Assessment: Request ECCC's assessment of how
+precipitation data gaps affect actuarial risk modeling for agricultural
+insurance programs in Ontario, Quebec, and Alberta.
+Alberta Extension: Request comparable network statistics for Alberta
+(the Jan 2026 ministerial response covered Ontario & Quebec only).
+---
+Report generated 2026-04-13
+Scope: Ontario, Quebec, and Alberta
