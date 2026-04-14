@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canada Weather Network Audit - Dr. Adrian Hernandez-del-Valle</title>
+    <title>Windrose — Canada Weather Network Audit</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -122,9 +122,50 @@
             font-size: 0.85em;
             line-height: 2;
         }
+
+        /* ── Loading spinner ────────────────────────────────────────────── */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #1a1a2e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            font-family: -apple-system, sans-serif;
+            color: #fff;
+            transition: opacity 0.4s ease;
+        }
+        #loading-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .spinner {
+            width: 48px; height: 48px;
+            border: 5px solid rgba(255,255,255,0.15);
+            border-top-color: #e74c3c;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text {
+            font-size: 1em;
+            opacity: 0.7;
+            letter-spacing: 0.03em;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Loading screen — dismissed by window.onload below -->
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading Windrose — Canada Weather Audit...</div>
+    </div>
+
     <div class="container">
 
         <div class="header">
@@ -344,12 +385,27 @@
 
         <div class="footer">
             <p>Dr. Adrian Hernandez-del-Valle, PhD</p>
-            <p>Instituto Politécnico Nacional, México</p>
-            <p>Technology Solutions Consultant — SCRI, Montreal</p>
+            <p>Instituto Politécnico Nacional, México | Technology Solutions Consultant — SCRI, Montreal</p>
             <p>Data source: Environment Canada MSC Datamart &amp; Collaboration Server</p>
             <p>Methodology: ECCC 5-category classification per Minister Dabrusin's January 2026 response</p>
+            <p>© 2026 Borealis Intelligence Inc. — windrose.news</p>
         </div>
 
-    </div>
+    </div><!-- end container -->
+
+    <script>
+        // Dismiss the loading screen as soon as the page content is ready.
+        // This page is lightweight HTML — no map, no large JSON —
+        // so window.onload fires within 1–2 seconds on any connection.
+        window.addEventListener('load', function () {
+            var screen = document.getElementById('loading-screen');
+            if (screen) {
+                screen.classList.add('fade-out');
+                // Remove from DOM after the CSS transition finishes
+                setTimeout(function () { screen.style.display = 'none'; }, 450);
+            }
+        });
+    </script>
+
 </body>
 </html>
