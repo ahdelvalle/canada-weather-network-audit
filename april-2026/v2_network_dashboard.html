@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECCC Precipitation Network Audit — V2.1</title>
+    <title>Windrose — ECCC Precipitation Network Audit (April 2026)</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -107,9 +107,25 @@
             .province-grid { grid-template-columns: 1fr !important; }
             .headline-number { font-size: 2.5em; }
         }
+        #page-spinner {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #1a2a3a;
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        #page-spinner.hidden { opacity: 0; pointer-events: none; }
+        .spinner-ring {
+            width: 56px; height: 56px;
+            border: 5px solid rgba(255,255,255,0.15);
+            border-top-color: #e53e3e;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
+    <div id="page-spinner"><div class="spinner-ring"></div></div>
     <div class="container">
 
         <div class="header">
@@ -268,13 +284,14 @@
                 <strong>Stations Audited:</strong> 5805
             </p>
             <p style="margin-top: 15px;"><strong>Dr. Adrian Hernandez-del-Valle, PhD</strong></p>
-            <p>Instituto Politécnico Nacional, México</p>
-            <p>SCRI — Services Communautaires pour Réfugiés et Immigrants, Montreal</p>
+            <p>Borealis Intelligence Inc. — <a href="https://windrose.news" style="color:#63b3ed">windrose.news</a></p>
+            <p>Instituto Politécnico Nacional, México &nbsp;|&nbsp; SCRI, Montreal</p>
             <p><a href="mailto:ahdv@hotmail.com">ahdv@hotmail.com</a> | 514-208-5677</p>
             <p style="margin-top: 15px;">
                 <a href="https://github.com/ahdelvalle/canada-weather-network-audit">GitHub</a> |
-                <a href="https://ahdelvalle.github.io/canada-weather-network-audit/">Dashboard</a>
+                <a href="https://windrose.news">windrose.news</a>
             </p>
+            <p style="margin-top: 12px; font-size: 0.8em; opacity: 0.6;">© 2026 Borealis Intelligence Inc.</p>            
         </div>
     </div>
 
@@ -371,6 +388,14 @@
         var points = allStations.map(function(s) { return [s.lat, s.lon]; });
         if (points.length > 0) {
             map.fitBounds(points, { padding: [30, 30] });
+            // Dismiss spinner once map is ready
+        setTimeout(function() {
+            var spinner = document.getElementById('page-spinner');
+            if (spinner) {
+                spinner.classList.add('hidden');
+                setTimeout(function() { spinner.remove(); }, 600);
+            }
+        }, 300);
         }
     </script>
 </body>
