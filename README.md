@@ -72,26 +72,9 @@ canada-weather-network-audit/
 
 ---
 
-## 🚀 Quick Start
+## 🌐 Live Site
 
-### Viewing the Live Site
-
-Visit: [https://ahdelvalle.github.io/canada-weather-network-audit/](https://ahdelvalle.github.io/canada-weather-network-audit/)
-
-### Downloading the Data
-
-```bash
-# Clone the repository
-git clone https://github.com/ahdelvalle/canada-weather-network-audit.git
-cd canada-weather-network-audit
-
-# Open the dashboard locally
-open weather_station_dashboard_visible.html
-
-# Or start a simple web server
-python -m http.server 8000
-# Then visit: http://localhost:8000
-```
+Visit [windrose.news](https://windrose.news)
 
 ---
 
