@@ -1,9 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- ─── Document basics (must be in first 1024 bytes) ─────────────── -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windrose — Canada Weather Network Audit</title>
+    <title>Windrose — Canada Precipitation Network Audit</title>
+
+    <!-- ─── SEO / discoverability ──────────────────────────────────────── -->
+    <meta name="description" content="Independent station-level reliability assessment of Environment and Climate Change Canada's precipitation monitoring network. 8,374 stations audited; 81.2% decommissioned; 1 in 4 active stations failing.">
+    <meta name="author" content="Dr. Adrian Hernandez-del-Valle, PhD">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://windrose.news/">
+
+    <!-- ─── Open Graph (LinkedIn, Slack, email previews) ───────────────── -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Windrose">
+    <meta property="og:title" content="Windrose — Canada Precipitation Network Audit">
+    <meta property="og:description" content="Independent reliability assessment of ECCC's precipitation monitoring network. 1 in 4 active stations failing; 81.2% of inventory decommissioned.">
+    <meta property="og:url" content="https://windrose.news/">
+    <meta property="og:image" content="https://windrose.news/og-preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="en_CA">
+
+    <!-- ─── Twitter Card ──────────────────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Windrose — Canada Precipitation Network Audit">
+    <meta name="twitter:description" content="Independent reliability assessment of ECCC's precipitation monitoring network.">
+    <meta name="twitter:image" content="https://windrose.news/og-preview.png">
+
+    <!-- ─── Favicon (inline SVG — compass rose) ────────────────────────── -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='10' fill='%231a1a2e'/><g stroke='%23e74c3c' stroke-width='2' fill='%23e74c3c'><polygon points='32,10 36,32 32,30 28,32'/><polygon points='54,32 32,36 34,32 32,28'/><polygon points='32,54 28,32 32,34 36,32'/><polygon points='10,32 32,28 30,32 32,36'/></g><circle cx='32' cy='32' r='3' fill='%23fff'/></svg>">
+
+    <!-- ─── JSON-LD structured data (helps Google understand the site) ── -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Windrose",
+      "url": "https://windrose.news",
+      "description": "Independent data intelligence product providing station-level reliability assessments of Environment and Climate Change Canada's precipitation monitoring infrastructure.",
+      "founder": {
+        "@type": "Person",
+        "name": "Adrian Hernandez-del-Valle",
+        "jobTitle": "PhD Economist",
+        "url": "https://www.linkedin.com/in/adrian-hernandez-del-valle-576a7028/"
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Montreal",
+        "addressRegion": "QC",
+        "addressCountry": "CA"
+      },
+      "email": "adrian@windrose.news"
+    }
+    </script>
+
+    <!-- ─── Google Analytics (gtag.js) with Consent Mode v2 ─────────────
+         Law 25 (Quebec) & PIPEDA (Canada) compliant:
+         - All storage defaults to 'denied'
+         - Only upgraded to 'granted' after explicit user consent
+         - Consent choice persisted in localStorage (cookieless signal)
+    ───────────────────────────────────────────────────────────────────── -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+
+      // Deny everything by default — analytics runs only after consent.
+      gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'analytics_storage': 'denied',
+        'functionality_storage': 'granted',
+        'security_storage': 'granted',
+        'wait_for_update': 500
+      });
+
+      gtag('js', new Date());
+      gtag('config', 'G-5D6FNZS1C8', {
+        'anonymize_ip': true
+      });
+
+      // If the user previously consented, re-apply immediately.
+      try {
+        if (localStorage.getItem('windrose_consent') === 'granted') {
+          gtag('consent', 'update', {
+            'analytics_storage': 'granted'
+          });
+        }
+      } catch (e) { /* localStorage unavailable — stay denied */ }
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5D6FNZS1C8"></script>
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -15,7 +104,7 @@
         .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
         .header { text-align: center; margin-bottom: 50px; }
         .header h1 { font-size: 2.5em; margin-bottom: 15px; }
-        .header p { font-size: 1.2em; opacity: 0.8; }
+        .header p { font-size: 1.2em; opacity: 0.85; }
         .alert-banner {
             background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
             padding: 20px;
@@ -42,6 +131,11 @@
             transform: translateY(-3px);
             border-color: rgba(231,76,60,0.5);
             box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        .report-card:focus-visible {
+            outline: 2px solid #e74c3c;
+            outline-offset: 4px;
+            border-color: rgba(231,76,60,0.9);
         }
         .report-card.latest {
             border-color: rgba(231,76,60,0.6);
@@ -87,7 +181,7 @@
         .stat { text-align: center; }
         .stat .number { font-size: 2.2em; font-weight: bold; color: #e74c3c; }
         .stat .number.green { color: #2ecc71; }
-        .stat .label { font-size: 0.85em; opacity: 0.7; margin-top: 4px; }
+        .stat .label { font-size: 0.85em; opacity: 0.75; margin-top: 4px; }
         .province-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -101,11 +195,11 @@
             font-size: 0.82em;
             text-align: center;
         }
-        .province-chip .pname { font-weight: bold; margin-bottom: 4px; opacity: 0.85; }
+        .province-chip .pname { font-weight: bold; margin-bottom: 4px; opacity: 0.9; }
         .province-chip .prate { font-size: 1.3em; font-weight: bold; color: #e74c3c; }
         .province-chip .prate.amber { color: #f39c12; }
-        .province-chip .psub { font-size: 0.78em; opacity: 0.6; }
-        .report-meta p { font-size: 0.9em; opacity: 0.75; line-height: 1.8; }
+        .province-chip .psub { font-size: 0.78em; opacity: 0.7; }
+        .report-meta p { font-size: 0.9em; opacity: 0.8; line-height: 1.8; }
         .report-meta strong { opacity: 1; color: #fff; }
         .links { margin-top: 40px; text-align: center; }
         .links a {
@@ -115,12 +209,37 @@
             font-size: 0.95em;
         }
         .links a:hover { text-decoration: underline; }
+        .links a:focus-visible {
+            outline: 2px solid #63b3ed;
+            outline-offset: 3px;
+            border-radius: 3px;
+        }
         .footer {
             margin-top: 50px;
             text-align: center;
-            opacity: 0.5;
+            opacity: 0.7;
             font-size: 0.85em;
             line-height: 2;
+        }
+        .footer a { color: #63b3ed; }
+        .footer a:hover { text-decoration: underline; }
+
+        /* ── Mobile responsive ────────────────────────────────────────── */
+        @media (max-width: 700px) {
+            .container { padding: 24px 14px; }
+            .header { margin-bottom: 32px; }
+            .header h1 { font-size: 1.75em; line-height: 1.25; }
+            .header p { font-size: 1em; }
+            .alert-banner { font-size: 0.95em; padding: 16px; }
+            .report-card { padding: 22px 18px; }
+            .report-card h2 { font-size: 1.25em; margin-bottom: 16px; }
+            .stats-row { grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+            .stat .number { font-size: 1.5em; }
+            .stat .label { font-size: 0.75em; }
+            .province-row,
+            .province-row[style] { grid-template-columns: 1fr 1fr !important; }
+            .province-chip { padding: 8px 10px; }
+            .report-meta p { font-size: 0.88em; line-height: 1.7; }
         }
 
         /* ── Loading spinner ────────────────────────────────────────────── */
@@ -156,11 +275,85 @@
             opacity: 0.7;
             letter-spacing: 0.03em;
         }
+
+        /* ── Consent banner (Law 25 / PIPEDA) ───────────────────────── */
+        #consent-banner {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: #0f1424;
+            border-top: 1px solid rgba(231,76,60,0.4);
+            padding: 18px 20px;
+            z-index: 10000;
+            box-shadow: 0 -6px 30px rgba(0,0,0,0.5);
+            display: none;
+        }
+        #consent-banner.visible { display: block; }
+        .consent-inner {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px;
+            justify-content: space-between;
+        }
+        .consent-text {
+            flex: 1 1 400px;
+            font-size: 0.9em;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+        .consent-text a {
+            color: #63b3ed;
+            text-decoration: underline;
+        }
+        .consent-buttons {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        .consent-btn {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            font-family: inherit;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        .consent-btn.accept {
+            background: #e74c3c;
+            color: white;
+        }
+        .consent-btn.accept:hover { background: #c0392b; }
+        .consent-btn.decline {
+            background: transparent;
+            color: #fff;
+            border-color: rgba(255,255,255,0.3);
+        }
+        .consent-btn.decline:hover { border-color: rgba(255,255,255,0.6); }
+        .consent-btn:focus-visible {
+            outline: 2px solid #63b3ed;
+            outline-offset: 2px;
+        }
+        @media (max-width: 600px) {
+            .consent-buttons { width: 100%; }
+            .consent-btn { flex: 1; }
+        }
     </style>
+
+    <!-- If JS is disabled, don't trap the user behind a spinner -->
+    <noscript>
+        <style>
+            #loading-screen { display: none !important; }
+            #consent-banner { display: none !important; }
+        </style>
+    </noscript>
 </head>
 <body>
 
-    <!-- Loading screen — dismissed by window.onload below -->
+    <!-- Loading screen — dismissed by window.onload (+ 3s safety fallback) -->
     <div id="loading-screen">
         <div class="spinner"></div>
         <div class="loading-text">Loading Windrose — Canada Weather Audit...</div>
@@ -176,13 +369,13 @@
         <div class="alert-banner">
             ⚠️ APRIL 2026 FINDINGS: 1 in 4 active precipitation stations across Canada has transmission issues. 81.2% of ECCC's inventory is decommissioned. Full 12-province report available to institutional clients — <a href="mailto:adrian@windrose.news?subject=Full%20Report%20Request%20-%20Windrose%20Canada%20Precipitation%20Audit" style="color:white;font-weight:bold;text-decoration:underline;">request access</a>.
         </div>
-    
+
         <div class="reports-grid">
 
             <!-- ============================================================ -->
             <!-- FULL CANADA REPORT — COMMERCIAL                              -->
             <!-- ============================================================ -->
-            <a class="report-card latest" href="2026-04-full-report/dashboard.html">    
+            <a class="report-card latest" href="2026-04-full-report/dashboard.html">
                 <div style="display:inline-block; background:#1a7a4a; color:white; padding:4px 12px; border-radius:20px; font-size:0.8em; font-weight:bold; margin-bottom:12px;">NATIONAL OVERVIEW</div>
                 <h2><span>🇨🇦</span>Canada Precipitation Network Reliability Report — 2026</h2>
                 <div class="stats-row">
@@ -204,8 +397,8 @@
                     <p>
                         <strong>Scope:</strong> 12 provinces and territories — full national assessment<br>
                         <strong>Coverage:</strong> 10,261,304 daily records across 1,434 stations over 36 years<br>
-                        <strong>Key finding:</strong> 101 ghost stations. Zero EXCELLENT-rated stations in NWT or Nunavut. 
-                        82% of canonical reference city stations decommissioned — including Calgary, Edmonton, 
+                        <strong>Key finding:</strong> 101 ghost stations. Zero EXCELLENT-rated stations in NWT or Nunavut.
+                        82% of canonical reference city stations decommissioned — including Calgary, Edmonton,
                         Vancouver, Winnipeg, Toronto, Halifax, and Regina.<br>
                         <strong>Published:</strong> April 16, 2026 — 64 pages
                     </p>
@@ -219,27 +412,27 @@
             <!-- ============================================================ -->
             <div class="report-card" style="text-align:center; border-color:rgba(26,122,74,0.4); background:rgba(26,122,74,0.08); cursor:default;">
                 <h2 style="margin-bottom:15px;"><span>📄</span>Request the Full 64-Page Report</h2>
-                <p style="font-size:1em; opacity:0.85; line-height:1.7; margin-bottom:20px;">
+                <p style="font-size:1em; opacity:0.9; line-height:1.7; margin-bottom:20px;">
                     The complete <strong>Canada Precipitation Network Reliability Report (April 2026)</strong> — 64 pages, 12 provinces and territories, full station-level classification dataset, and successor mapping for all 85 canonical city reference IDs — is available to institutional clients.
                 </p>
-                <p style="font-size:0.95em; opacity:0.8; line-height:1.7; margin-bottom:25px;">
+                <p style="font-size:0.95em; opacity:0.85; line-height:1.7; margin-bottom:25px;">
                     For actuarial teams, engineering consultancies, reinsurers, provincial ministries, and legal counsel. Province-specific reports, monthly monitoring subscriptions, and raw data exports also available.
                 </p>
-                <p style="font-size:0.9em; opacity:0.75; line-height:1.6; margin-bottom:20px;">
+                <p style="font-size:0.9em; opacity:0.8; line-height:1.6; margin-bottom:20px;">
                     Please include in your email: <strong>organization</strong>, <strong>role</strong>, and <strong>intended use</strong>. A response typically follows within one business day.
                 </p>
-                <a href="mailto:adrian@windrose.news?subject=Full%20Report%20Request%20-%20Windrose%20Canada%20Precipitation%20Audit" 
+                <a href="mailto:adrian@windrose.news?subject=Full%20Report%20Request%20-%20Windrose%20Canada%20Precipitation%20Audit"
                    style="display:inline-block; padding:14px 32px; background:#1a7a4a; color:white; border-radius:25px; text-decoration:none; font-weight:bold; font-size:1em;">
                     ✉️ Request Access — adrian@windrose.news
                 </a>
-                <p style="margin-top:12px; font-size:0.8em; opacity:0.55;">
+                <p style="margin-top:12px; font-size:0.8em; opacity:0.65;">
                     Opens your default mail client. Or email directly: adrian@windrose.news
-                </p>                
-                <p style="margin-top:18px; font-size:0.85em; opacity:0.65;">
+                </p>
+                <p style="margin-top:18px; font-size:0.85em; opacity:0.75;">
                     Founding client rate (30% off first engagement) available through June 16, 2026.
                 </p>
             </div>
-            
+
             <!-- ============================================================ -->
             <!-- APRIL 2026 — LATEST                                          -->
             <!-- ============================================================ -->
@@ -404,8 +597,8 @@
                     </p>
                 </div>
                 <span class="view-dashboard">📍 View Interactive Map →</span>
-            </a>            
-            
+            </a>
+
             <!-- ============================================================ -->
             <!-- DECEMBER 2025                                                 -->
             <!-- ============================================================ -->
@@ -440,7 +633,8 @@
 
         <div class="links">
             <a href="mailto:adrian@windrose.news">✉️ Contact</a>
-            <a href="https://www.linkedin.com/in/adrian-hernandez-del-valle-576a7028/" target="_blank" rel="noopener">🔗 LinkedIn</a>
+            <a href="https://www.linkedin.com/in/adrian-hernandez-del-valle-576a7028/" target="_blank" rel="noopener noreferrer">🔗 LinkedIn</a>
+            <a href="/privacy.html">🔒 Privacy</a>
         </div>
 
         <div class="footer">
@@ -448,23 +642,73 @@
             <p>Windrose — Canada Precipitation Network Intelligence</p>
             <p>Data source: Environment Canada MSC Datamart &amp; Collaboration Server</p>
             <p>Methodology: ECCC 5-category classification per Minister Dabrusin's January 2026 response</p>
-            <p>© 2026 Windrose — <a href="https://windrose.news" style="color:inherit">windrose.news</a></p>            
+            <p>© 2026 Windrose — <a href="https://windrose.news">windrose.news</a> — Montréal, Québec, Canada</p>
         </div>
 
     </div><!-- end container -->
 
+    <!-- ─── Consent banner (Law 25 / PIPEDA) ─────────────────────────── -->
+    <div id="consent-banner" role="dialog" aria-live="polite" aria-label="Privacy consent">
+        <div class="consent-inner">
+            <div class="consent-text">
+                Windrose uses Google Analytics to understand how visitors use this site.
+                No personal information is sold or shared with advertisers. See our
+                <a href="/privacy.html">Privacy Policy</a> for details.
+                You can change your choice at any time.
+            </div>
+            <div class="consent-buttons">
+                <button class="consent-btn decline" id="consent-decline" type="button">Decline</button>
+                <button class="consent-btn accept" id="consent-accept" type="button">Accept</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Dismiss the loading screen as soon as the page content is ready.
-        // This page is lightweight HTML — no map, no large JSON —
-        // so window.onload fires within 1–2 seconds on any connection.
-        window.addEventListener('load', function () {
-            var screen = document.getElementById('loading-screen');
-            if (screen) {
-                screen.classList.add('fade-out');
-                // Remove from DOM after the CSS transition finishes
-                setTimeout(function () { screen.style.display = 'none'; }, 450);
+        // ── Loading screen dismissal with safety timeout ─────────────────
+        (function () {
+            var dismissed = false;
+            function dismiss() {
+                if (dismissed) return;
+                dismissed = true;
+                var screen = document.getElementById('loading-screen');
+                if (screen) {
+                    screen.classList.add('fade-out');
+                    setTimeout(function () { screen.style.display = 'none'; }, 450);
+                }
             }
-        });
+            window.addEventListener('load', dismiss);
+            // Safety: dismiss after 3s even if the load event never fires
+            setTimeout(dismiss, 3000);
+        })();
+
+        // ── Consent banner logic ─────────────────────────────────────────
+        (function () {
+            var banner  = document.getElementById('consent-banner');
+            var accept  = document.getElementById('consent-accept');
+            var decline = document.getElementById('consent-decline');
+            var stored;
+            try { stored = localStorage.getItem('windrose_consent'); }
+            catch (e) { stored = null; }
+
+            // Show banner only if the user has not yet chosen.
+            if (!stored && banner) {
+                // Delay slightly so it appears after the loading screen fades.
+                setTimeout(function () { banner.classList.add('visible'); }, 900);
+            }
+
+            function setConsent(value) {
+                try { localStorage.setItem('windrose_consent', value); } catch (e) {}
+                if (typeof gtag === 'function') {
+                    gtag('consent', 'update', {
+                        'analytics_storage': value === 'granted' ? 'granted' : 'denied'
+                    });
+                }
+                if (banner) banner.classList.remove('visible');
+            }
+
+            if (accept)  accept.addEventListener('click',  function () { setConsent('granted'); });
+            if (decline) decline.addEventListener('click', function () { setConsent('denied');  });
+        })();
     </script>
 
 </body>
