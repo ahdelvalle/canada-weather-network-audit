@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Politique de confidentialité — Windrose</title>
+    <meta name="description" content="Politique de confidentialité de Windrose. Comment nous recueillons, utilisons et protégeons les renseignements personnels, conformément à la Loi 25 du Québec et à la LPRPDE du Canada.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://windrose.news/privacy-fr.html">
+    <link rel="alternate" hreflang="en" href="https://windrose.news/privacy.html">
+    <link rel="alternate" hreflang="fr" href="https://windrose.news/privacy-fr.html">
+
+    <!-- Favicon (SVG inline — identique à index.html) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='10' fill='%231a1a2e'/><g stroke='%23e74c3c' stroke-width='2' fill='%23e74c3c'><polygon points='32,10 36,32 32,30 28,32'/><polygon points='54,32 32,36 34,32 32,28'/><polygon points='32,54 28,32 32,34 36,32'/><polygon points='10,32 32,28 30,32 32,36'/></g><circle cx='32' cy='32' r='3' fill='%23fff'/></svg>">
+
+    <script src="/windrose-analytics.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            line-height: 1.7;
+        }
+        .container { max-width: 820px; margin: 0 auto; padding: 50px 24px 80px; }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .back-link {
+            color: #63b3ed;
+            text-decoration: none;
+            font-size: 0.9em;
+            opacity: 0.85;
+        }
+        .back-link:hover { opacity: 1; text-decoration: underline; }
+
+        .lang-switch {
+            font-size: 0.85em;
+            opacity: 0.85;
+        }
+        .lang-switch a {
+            color: #63b3ed;
+            text-decoration: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+        .lang-switch a:hover { background: rgba(99,179,237,0.15); }
+        .lang-switch .active {
+            color: #fff;
+            background: rgba(231,76,60,0.25);
+            border: 1px solid rgba(231,76,60,0.4);
+            cursor: default;
+        }
+        .lang-switch .sep { opacity: 0.4; margin: 0 4px; }
+
+        .header {
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            padding-bottom: 20px;
+            margin-bottom: 36px;
+        }
+        .header h1 {
+            font-size: 2.1em;
+            margin-bottom: 10px;
+            line-height: 1.25;
+        }
+        .header .meta {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+
+        .intro {
+            background: rgba(255,255,255,0.05);
+            border-left: 3px solid #e74c3c;
+            padding: 18px 22px;
+            border-radius: 4px;
+            margin-bottom: 36px;
+            font-size: 0.95em;
+            opacity: 0.95;
+        }
+
+        h2 {
+            font-size: 1.35em;
+            margin-top: 38px;
+            margin-bottom: 14px;
+            color: #fff;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+        h3 {
+            font-size: 1.05em;
+            margin-top: 22px;
+            margin-bottom: 8px;
+            color: #ffb8b0;
+        }
+
+        p {
+            margin-bottom: 14px;
+            opacity: 0.92;
+            font-size: 0.98em;
+        }
+        ul, ol {
+            margin: 0 0 16px 22px;
+            opacity: 0.92;
+        }
+        li { margin-bottom: 8px; font-size: 0.98em; }
+        strong { color: #fff; opacity: 1; }
+        a {
+            color: #63b3ed;
+            text-decoration: underline;
+        }
+        a:hover { color: #8ac7f0; }
+        a:focus-visible {
+            outline: 2px solid #63b3ed;
+            outline-offset: 2px;
+            border-radius: 2px;
+        }
+
+        .contact-box {
+            background: rgba(231,76,60,0.1);
+            border: 1px solid rgba(231,76,60,0.35);
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin: 30px 0;
+        }
+        .contact-box p { margin-bottom: 6px; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 22px;
+            font-size: 0.92em;
+        }
+        th, td {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            vertical-align: top;
+        }
+        th {
+            background: rgba(255,255,255,0.05);
+            font-weight: 600;
+            opacity: 1;
+        }
+        td { opacity: 0.9; }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            font-size: 0.85em;
+            opacity: 0.7;
+            line-height: 1.9;
+        }
+        .footer a { color: #63b3ed; }
+
+        @media (max-width: 640px) {
+            .container { padding: 32px 16px 60px; }
+            .header h1 { font-size: 1.6em; }
+            h2 { font-size: 1.15em; }
+            table { font-size: 0.85em; }
+            th, td { padding: 8px 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="top-nav">
+            <a href="/" class="back-link">← Retour à Windrose</a>
+            <div class="lang-switch">
+                <a href="/privacy.html">EN</a>
+                <span class="sep">|</span>
+                <a class="active" aria-current="page">FR</a>
+            </div>
+        </div>
+
+        <div class="header">
+            <h1>Politique de confidentialité</h1>
+            <p class="meta">
+                Date d'entrée en vigueur : 23 avril 2026 &nbsp;·&nbsp; Dernière mise à jour : 23 avril 2026
+            </p>
+        </div>
+
+        <div class="intro">
+            <p>
+                Windrose est exploité depuis Montréal (Québec), Canada. La présente politique
+                décrit les renseignements personnels que Windrose recueille, les fins pour
+                lesquelles ils sont utilisés, les mesures prises pour les protéger, ainsi que les
+                droits qui vous sont reconnus en vertu de la <em>Loi sur la protection des
+                renseignements personnels dans le secteur privé</em> du Québec (communément
+                appelée la <strong>« Loi 25 »</strong>) et de la <em>Loi sur la protection des
+                renseignements personnels et les documents électroniques</em> du Canada
+                (la <strong>« LPRPDE »</strong>).
+            </p>
+        </div>
+
+        <h2>1. Qui nous sommes</h2>
+        <p>
+            <strong>Windrose</strong> est un produit commercial d'intelligence de données
+            exploité par le Dr Adrian Hernandez-del-Valle, Ph. D., basé à Montréal (Québec),
+            Canada. Windrose publie des évaluations indépendantes de la fiabilité du réseau de
+            surveillance des précipitations d'Environnement et Changement climatique Canada et
+            offre des rapports et abonnements connexes à une clientèle institutionnelle.
+        </p>
+        <p>
+            Dans la présente politique, les termes «&nbsp;<strong>nous</strong>&nbsp;»,
+            «&nbsp;<strong>notre</strong>&nbsp;» et «&nbsp;<strong>Windrose</strong>&nbsp;»
+            désignent l'exploitant décrit ci-dessus. Le terme
+            «&nbsp;<strong>vous</strong>&nbsp;» désigne toute personne qui visite
+            <a href="https://windrose.news">windrose.news</a> ou qui nous joint par courriel ou
+            par tout autre moyen.
+        </p>
+
+        <h2>2. Responsable de la protection des renseignements personnels</h2>
+        <p>
+            Conformément à la Loi 25, la personne responsable de la protection des
+            renseignements personnels chez Windrose est :
+        </p>
+        <div class="contact-box">
+            <p><strong>Dr Adrian Hernandez-del-Valle, Ph. D.</strong></p>
+            <p>Responsable de la protection des renseignements personnels, Windrose</p>
+            <p>Courriel : <a href="mailto:adrian@windrose.news">adrian@windrose.news</a></p>
+            <p>Lieu : Montréal (Québec), Canada</p>
+        </div>
+        <p>
+            Vous pouvez en tout temps communiquer avec le responsable pour exercer les droits
+            décrits à la section 8, poser des questions sur la présente politique ou déposer une
+            plainte. Nous nous engageons à répondre aux demandes dans un délai de
+            <strong>30 jours</strong>, comme l'exige la Loi 25.
+        </p>
+
+        <h2>3. Renseignements personnels que nous recueillons</h2>
+        <p>
+            Nous ne recueillons que les renseignements personnels nécessaires à l'exploitation
+            de Windrose. Les catégories sont résumées ci-dessous.
+        </p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Catégorie</th>
+                    <th>Exemples</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Coordonnées</strong></td>
+                    <td>Nom, adresse courriel, organisation, fonction, contenu de votre message</td>
+                    <td>Fournis par vous lorsque vous nous écrivez ou demandez un rapport</td>
+                </tr>
+                <tr>
+                    <td><strong>Données d'analyse du site</strong></td>
+                    <td>Adresse IP (anonymisée), type d'appareil, navigateur, pages consultées, site de provenance, localisation approximative (au niveau du pays), durée de session</td>
+                    <td>Recueillis automatiquement par Google Analytics 4, <em>uniquement si vous y consentez</em></td>
+                </tr>
+                <tr>
+                    <td><strong>Journaux techniques</strong></td>
+                    <td>Journaux de serveur Web standards tenus par GitHub Pages (notre fournisseur d'hébergement)</td>
+                    <td>Recueillis automatiquement par notre infrastructure d'hébergement</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            Windrose ne recueille pas sciemment de renseignements personnels auprès d'enfants
+            âgés de moins de 14 ans. Windrose n'utilise pas de renseignements personnels à des
+            fins de prise de décision automatisée ou de profilage produisant des effets
+            juridiques ou affectant de manière importante la personne concernée.
+        </p>
+
+        <h2>4. Finalités de la collecte</h2>
+        <p>Nous utilisons les renseignements personnels uniquement aux fins particulières suivantes :</p>
+        <ul>
+            <li><strong>Pour répondre à vos demandes.</strong> Lorsque vous nous écrivez pour demander un rapport, une soumission ou de l'information, nous utilisons vos coordonnées pour vous répondre et, le cas échéant, discuter d'un mandat potentiel.</li>
+            <li><strong>Pour fournir nos services.</strong> Si vous devenez client, nous utilisons vos coordonnées et les renseignements relatifs à votre organisation pour livrer les rapports, les factures et les communications commerciales connexes.</li>
+            <li><strong>Pour comprendre l'utilisation du site.</strong> Avec votre consentement, nous utilisons Google Analytics pour comprendre quels rapports sont consultés, comment les visiteurs nous trouvent, et pour améliorer le site. Ces données sont agrégées et ne servent pas à identifier les personnes.</li>
+            <li><strong>Pour respecter nos obligations légales.</strong> Nous pouvons traiter des renseignements afin de respecter les obligations applicables en matière fiscale, comptable et de prévention de la fraude au Québec et au Canada.</li>
+        </ul>
+        <p>
+            Nous n'utiliserons pas vos renseignements personnels à de nouvelles fins
+            matériellement différentes de celles énumérées ci-dessus sans obtenir d'abord votre
+            consentement.
+        </p>
+
+        <h2>5. Fondement juridique et consentement</h2>
+        <p>
+            Notre traitement repose sur votre <strong>consentement</strong> (pour les données
+            d'analyse), sur l'<strong>exécution d'une relation précontractuelle ou
+            contractuelle</strong> (pour répondre à vos demandes et livrer les services), ainsi
+            que sur notre <strong>intérêt légitime</strong> à exploiter et à améliorer une
+            petite entreprise commerciale.
+        </p>
+        <p>
+            Les outils d'analyse ne sont chargés qu'après que vous ayez cliqué sur
+            «&nbsp;Accepter&nbsp;» dans la bannière de consentement. Vous pouvez retirer votre
+            consentement en tout temps en effaçant les données du site pour
+            <code>windrose.news</code> dans votre navigateur ou en écrivant au responsable. Le
+            retrait du consentement n'a pas d'effet sur la licéité du traitement effectué avant
+            ce retrait.
+        </p>
+
+        <h2>6. Témoins (cookies) et technologies similaires</h2>
+        <p>
+            Windrose utilise un nombre restreint d'éléments de stockage du navigateur :
+        </p>
+        <ul>
+            <li><strong>windrose_consent</strong> — une entrée <code>localStorage</code> qui enregistre si vous avez accepté ou refusé les données d'analyse, de sorte que la question ne vous soit pas reposée à chaque visite. Cette entrée est strictement fonctionnelle et est créée indépendamment de votre choix en matière d'analyse.</li>
+            <li><strong>Témoins Google Analytics</strong> (<code>_ga</code>, <code>_ga_*</code>) — créés uniquement si vous acceptez les données d'analyse. Ils permettent d'identifier les visiteurs récurrents de manière agrégée et expirent généralement après deux ans. Lorsque le consentement est refusé, Google Analytics fonctionne en «&nbsp;mode de consentement&nbsp;» : tout stockage est refusé et seuls des signaux anonymisés et sans témoin sont transmis.</li>
+        </ul>
+        <p>
+            Vous pouvez bloquer ou supprimer les témoins et le stockage local dans les
+            paramètres de votre navigateur. Cela n'affectera pas votre capacité à consulter le
+            site.
+        </p>
+
+        <h2>7. Communication à des tiers et transferts à l'extérieur du Québec</h2>
+        <p>
+            Windrose <strong>ne vend ni ne loue</strong> de renseignements personnels. Nous ne
+            partageons des renseignements personnels qu'avec les catégories suivantes de
+            fournisseurs de services, et ce, strictement aux fins de l'exploitation du site et
+            de l'entreprise :
+        </p>
+        <ul>
+            <li><strong>GitHub, Inc.</strong> — hébergement de <code>windrose.news</code> par l'entremise de GitHub Pages. Les serveurs sont situés aux États-Unis. Soumis aux pratiques de confidentialité de GitHub.</li>
+            <li><strong>Google LLC</strong> — Google Analytics 4 et Google Workspace (messagerie). Les données peuvent être traitées sur des serveurs situés aux États-Unis et dans d'autres juridictions. L'anonymisation des adresses IP est activée.</li>
+            <li><strong>Namecheap, Inc.</strong> — enregistrement du nom de domaine. Limité aux métadonnées d'enregistrement.</li>
+            <li><strong>Comptables et conseillers professionnels</strong> — retenus sous obligation de confidentialité pour la tenue de livres, la fiscalité et les avis juridiques.</li>
+        </ul>
+        <div class="contact-box">
+            <p><strong>Avis de transfert à l'extérieur du Québec (Loi 25, article 17).</strong></p>
+            <p>
+                Certains des fournisseurs énumérés ci-dessus stockent et traitent des
+                renseignements personnels à l'extérieur du Québec, principalement aux
+                États-Unis. Nous avons procédé à une évaluation de ces transferts et estimons
+                qu'ils offrent un niveau de protection équivalent à celui applicable au Québec,
+                compte tenu des garanties contractuelles en place et de la nature agrégée et
+                non sensible des renseignements en cause (essentiellement des coordonnées
+                professionnelles et des données d'analyse anonymisées). Si vous souhaitez
+                discuter de cette évaluation, veuillez communiquer avec le responsable.
+            </p>
+        </div>
+        <p>
+            Nous pouvons également communiquer des renseignements personnels si la loi, une
+            ordonnance judiciaire ou une demande valide d'une autorité compétente l'exige.
+        </p>
+
+        <h2>8. Vos droits</h2>
+        <p>En vertu de la Loi 25 et de la LPRPDE, vous disposez des droits suivants à l'égard de vos renseignements personnels :</p>
+        <ul>
+            <li><strong>Droit d'accès.</strong> Vous pouvez nous demander quels renseignements personnels nous détenons à votre sujet et en recevoir copie.</li>
+            <li><strong>Droit de rectification.</strong> Vous pouvez nous demander de corriger des renseignements inexacts, incomplets ou équivoques.</li>
+            <li><strong>Droit de retirer votre consentement.</strong> Vous pouvez retirer votre consentement à tout traitement fondé sur le consentement en tout temps.</li>
+            <li><strong>Droit à la portabilité des données.</strong> Lorsque cela s'applique, vous pouvez demander que vos renseignements vous soient communiqués dans un format technologique structuré et couramment utilisé (Loi 25, en vigueur depuis septembre 2024).</li>
+            <li><strong>Droit à la cessation de diffusion et à la désindexation.</strong> Vous pouvez demander la cessation de la diffusion de renseignements vous concernant ou leur désindexation, lorsque les conditions prévues à la Loi 25 sont réunies.</li>
+            <li><strong>Droit d'opposition et de suppression.</strong> Sous réserve de nos obligations légales, vous pouvez nous demander de cesser le traitement ou de supprimer vos renseignements.</li>
+            <li><strong>Droit à l'information sur les décisions automatisées.</strong> Nous ne prenons actuellement aucune décision automatisée produisant des effets juridiques ou affectant de manière importante la personne concernée.</li>
+        </ul>
+        <p>
+            Pour exercer l'un ou l'autre de ces droits, écrivez au responsable à
+            <a href="mailto:adrian@windrose.news">adrian@windrose.news</a>. Il se peut que nous
+            vous demandions des renseignements suffisants pour confirmer votre identité. Nous
+            répondrons dans un délai de 30 jours. Aucuns frais ne sont exigés, sauf dans les
+            cas permis par la loi (par exemple, une demande manifestement abusive), auquel cas
+            nous vous informerons du montant au préalable.
+        </p>
+
+        <h2>9. Durée de conservation des renseignements</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Catégorie</th>
+                    <th>Durée de conservation</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Correspondance par courriel (demandes qui ne mènent pas à un mandat)</td>
+                    <td>Jusqu'à 24 mois, puis suppression</td>
+                </tr>
+                <tr>
+                    <td>Coordonnées et dossiers relatifs à un mandat client</td>
+                    <td>Durée du mandat, plus 7 ans, conformément aux obligations de conservation fiscales et juridiques applicables au Québec et au Canada</td>
+                </tr>
+                <tr>
+                    <td>Factures et pièces comptables</td>
+                    <td>7 ans (tel qu'exigé par l'Agence du revenu du Canada et Revenu Québec)</td>
+                </tr>
+                <tr>
+                    <td>Données Google Analytics</td>
+                    <td>14 mois (durée de conservation minimale que nous avons configurée)</td>
+                </tr>
+                <tr>
+                    <td>Journaux de serveur Web (GitHub Pages)</td>
+                    <td>Selon les politiques de conservation propres à GitHub</td>
+                </tr>
+            </tbody>
+        </table>
+        <p>
+            À l'échéance d'une durée de conservation, nous supprimons ou anonymisons les
+            renseignements.
+        </p>
+
+        <h2>10. Mesures de protection</h2>
+        <p>
+            Nous mettons en place des mesures de sécurité raisonnables, adaptées à la
+            sensibilité des renseignements et à la nature d'une petite entreprise commerciale,
+            notamment :
+        </p>
+        <ul>
+            <li>Le chiffrement en transit (HTTPS) pour l'ensemble du trafic vers <code>windrose.news</code>.</li>
+            <li>L'authentification à deux facteurs sur les comptes d'administration (GitHub, Google Workspace, registraire de domaine).</li>
+            <li>La restriction de l'accès aux renseignements personnels au seul responsable.</li>
+            <li>Des clauses de confidentialité dans les ententes avec les conseillers professionnels.</li>
+        </ul>
+        <p>
+            En cas d'incident de confidentialité présentant un risque de préjudice sérieux,
+            Windrose informera sans délai la
+            <a href="https://www.cai.gouv.qc.ca/" target="_blank" rel="noopener noreferrer">Commission d'accès à l'information du Québec (CAI)</a>
+            et les personnes concernées, comme l'exige la Loi 25.
+        </p>
+
+        <h2>11. Comment déposer une plainte</h2>
+        <p>
+            Si vous estimez que vos droits n'ont pas été respectés, veuillez d'abord communiquer
+            avec le responsable à
+            <a href="mailto:adrian@windrose.news">adrian@windrose.news</a> afin que nous
+            tentions de régler la situation directement.
+        </p>
+        <p>
+            Vous avez également le droit de déposer une plainte auprès des autorités de
+            surveillance :
+        </p>
+        <ul>
+            <li>
+                <strong>Commission d'accès à l'information du Québec (CAI)</strong> —
+                <a href="https://www.cai.gouv.qc.ca/" target="_blank" rel="noopener noreferrer">cai.gouv.qc.ca</a>
+            </li>
+            <li>
+                <strong>Commissariat à la protection de la vie privée du Canada</strong> —
+                <a href="https://www.priv.gc.ca/" target="_blank" rel="noopener noreferrer">priv.gc.ca</a>
+            </li>
+        </ul>
+
+        <h2>12. Modifications à la présente politique</h2>
+        <p>
+            Nous pouvons mettre à jour la présente politique de temps à autre afin de refléter
+            des changements dans nos pratiques ou dans la législation. Lorsque nous apportons
+            des modifications importantes, nous mettons à jour la date de
+            «&nbsp;Dernière mise à jour&nbsp;» indiquée en haut de la page et, le cas échéant,
+            en informons directement nos clients par courriel. Nous vous invitons à consulter
+            cette page périodiquement.
+        </p>
+
+        <h2>13. Nous joindre</h2>
+        <p>
+            Pour toute question, demande ou préoccupation concernant la présente politique ou
+            vos renseignements personnels, veuillez communiquer avec :
+        </p>
+        <div class="contact-box">
+            <p><strong>Dr Adrian Hernandez-del-Valle, Ph. D.</strong></p>
+            <p>Responsable de la protection des renseignements personnels — Windrose</p>
+            <p>Courriel : <a href="mailto:adrian@windrose.news">adrian@windrose.news</a></p>
+            <p>Montréal (Québec), Canada</p>
+        </div>
+
+        <div class="footer">
+            <p>Windrose — Renseignement stratégique sur le réseau canadien de précipitations</p>
+            <p>© 2026 — <a href="https://windrose.news">windrose.news</a></p>
+        </div>
+
+    </div>
+
+</body>
+</html>
