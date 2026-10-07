@@ -3,11 +3,19 @@
 **An independent, non-commercial research project assessing station-level reliability of Environment and Climate Change Canada's (ECCC) precipitation monitoring infrastructure.**
 
 Published April 16, 2026. 64 pages. 12 provinces and territories.
+**Latest update: September 2026 — see below.**
 
 ---
 
-## Key Findings
+## Latest Update — September 2026: July → September Comparison
 
+**136 stations left the federal inventory between the July 18 and September 24, 2026 audits — all of them in Alberta** (120 of 136 are AGCM/AGDM agricultural stations); zero reclassifications among the 8,197 stations present in both audits. ECCC and Alberta Agriculture and Irrigation have confirmed in writing that the Government of Alberta's historical data was deliberately removed from the federal archive in August/September 2026, with Alberta's ACIS as the designated source going forward.
+
+Full report, station list, evidence files and pipeline notebook: **[september-2026/](september-2026/)**
+
+---
+
+## Key Findings (April 2026 report)
 - **8,374 stations** in ECCC's inventory; **6,797 (81.2%) are decommissioned**
 - Effective active network: **1,577 stations** across all of Canada
 - **370 active stations (23.5%)** have confirmed transmission issues
