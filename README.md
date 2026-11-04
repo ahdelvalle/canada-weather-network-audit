@@ -50,7 +50,7 @@ infrastructure monitoring systems in Canada. Analysis and reporting by
 Adrian Hernandez-del-Valle, PhD (Economic Sciences, IPN Mexico), MSc Statistics
 (Columbia University), MSc AI (Universitat Politècnica de Catalunya).
 
-Contact: adrian@windrose.news
+Contact: ahdelvalle@gmail.com
 
 ---
 
@@ -62,4 +62,4 @@ This work is shared for non-commercial research and informational purposes under
 [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/)
 license. You may share and adapt the material with attribution, for non-commercial purposes.
 
-Contact: adrian@windrose.news
+Contact: ahdelvalle@gmail.com
